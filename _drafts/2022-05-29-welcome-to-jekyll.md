@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "DRAFT: Do Political Facebook ads result in votes? A short analysis of the Facebook ad campaigns during the 2022 Dutch local elections"
+title:  "Do Political Facebook ads result in votes? A short analysis of the Facebook ad campaigns during the 2022 Dutch local elections"
 date:   2022-05-29
 author: "Joren Vrancken"
 ---
