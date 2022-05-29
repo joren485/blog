@@ -1,0 +1,13 @@
+domain: "blog.nietaanraken.nl"
+
+remote_theme: "jekyll/minima"
+minima:
+  skin: dark
+
+title: "Blog by Joren Vrancken"
+author:
+  name: "Joren Vrancken"
+  email: "jorenvrancken@gmail.com"
+
+header_pages:
+  - "about.md"
