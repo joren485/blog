@@ -1,9 +1,4 @@
----
-layout: post
-title:  "Do Political Facebook ads result in votes? A short analysis of the Facebook ad campaigns during the 2022 Dutch local elections"
-date:   2022-05-29
-author: "Joren Vrancken"
----
+# Do Political Facebook ads result in votes? A short analysis of the Facebook ad campaigns during the 2022 Dutch local elections
 <!-- Date range -->
 <!-- Interesting dataset: many parties, very localized impressions -->
 <!-- Caveat about automatic data -->
@@ -16,11 +11,10 @@ This is a great opportunity to do some data analysis on election data. Local ele
 We combined (publicly available) [election data about the local elections](https://data.overheid.nl/dataset/verkiezingsuitslagen-gemeenteraad-2022) with (publicly available) data from Facebook to be able to analyze the Facebook advertisement campaigns run by political parties during the Dutch local elections in 2022.
 
 This data allows us to make graphs like Figure 0, which shows the ramp up of political ads in the weeks leading up to the election date and the immediate stop of the ad campaigns after
-![Number of ads graph](/assets/number-of-ads.png)
-
+![Number of ads graph](number-of-ads.png)
 **Figure 0**: Number of Ads per Day from 1 Feb 2022 to 1 Apr 2022.
 
-### Background on the Facebook Ad Library
+## Background on the Facebook Ad Library
 
 In 2019, Facebook released the [Facebook Ad Library](https://www.facebook.com/ads/library/), a public repository of all (political) ads run on their platforms (i.e. Facebook and Instagram). This repository provides the content of each, as well as metadata about the ad (e.g. who ran the ad, who paid for the ad, how many times the ad was shown, how long the ad is/was active etc.). This allows for a lot of interesting research into microtargeting by political campaigns, because it is now possible for anyone to see all ads run by political campaigns. For example, [an online dashboard that I maintain](https://joren485.github.io/DutchPoliticalFacebookAdComparision/) that aggregates and tracks statistics about ads run by Dutch political parties.
 
@@ -32,8 +26,7 @@ The first question I wanted to answer is whether having a higher number of impre
 
 Figure 1 tries to answer this question. Every dot represents a party, with the sum of their impressions on the x-axis and the percentage of votes (i.e. the number of votes for a party divided by the number of valid votes in the municipality of the party) they got on the y-axis.
 <!-- Figure 1 does not show all data -->
-![Impressions x Votes Share Graph](/assets/impressions-votes-graph.png)
-
+![Impressions x Votes Share Graph](impressions-votes-graph.png)
 **Figure 1**: ???
 
 As we can see, there seems to be little to no correlation.
@@ -74,8 +67,7 @@ Branch parties are clearly getting more impressions than municipality parties. H
 560 branch parties run ads
 1022 municipality parties run ads.
 
-![National vs non-national impressions](/assets/national-vs-non-national.png)
-
+![National vs non-national impressions](national-vs-non-national.png)
 **Figure 2**: ???
 
 ### Conclusion
@@ -87,8 +79,6 @@ First, the Facebook Ad Library allows anyone to crunch some (in my opinion) inte
 Parties do not seem to get a significant edge over other parties by using the dark magic of microtargeting. This might be because microtargeting is not as powerful as many people think or because the parties are just getting started. Only time will tell.
 
 If you are interested in this kind of data, check out [this dashboard](https://joren485.github.io/DutchPoliticalFacebookAdComparision/) I created that tracks data and statistics about the Facebook ads of Dutch national parties.
-
----
 
 [^0]: The Ad Library does not provide exact numbers, but ranges. For example, it does not tell us that an ad cost €2543,21, but that the ad cost between €2000,- and €3000,-.
 
