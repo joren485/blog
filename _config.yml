@@ -1,8 +1,7 @@
 domain: "blog.nietaanraken.nl"
 
 remote_theme: "jekyll/minima"
-minima:
-  skin: dark
+
 
 title: "Blog by Joren Vrancken"
 author:
