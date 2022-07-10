@@ -2,7 +2,6 @@ domain: "blog.nietaanraken.nl"
 
 remote_theme: "jekyll/minima"
 
-
 title: "Blog by Joren Vrancken"
 author:
   name: "Joren Vrancken"

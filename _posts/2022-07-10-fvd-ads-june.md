@@ -66,7 +66,7 @@ Iedere Euro die je uitgeeft aan advertenties in de zomer van 2022, kan je niet m
 
 FvD maakt de keuze dat advertenties tijdens de boerenprotesten beter hun politieke doelen helpen bereiken dan advertenties tijdens de gemeenteraadsverkiezingen. Andere partijen maken een andere inschatting (of denken er simpelweg niet over na). Wat de juiste keuze is, is een open vraag. Sommige politieke doelen zijn daarbij ook meetbaarder (bijv. nieuwe leden en stemmen) dan andere (bijv. naamsbekendheid en beïnvloeding van de publieke opinie). We hebben gezien dat de keuze van FvD in ieder geval kosteneffectief is.
 
-Mijn verwachting is dat andere partijen FvD zullen volgen. Simpelweg omdat het een goedkope manier is om mensen direct te bereiken met je standpunten. Daardoor zullen de kosten omhoog gaan en de effectiviteit van de advertenties omlaag.
+Mijn verwachting is dat andere partijen FvD zullen volgen. Simpelweg omdat het een goedkope manier is om mensen direct te bereiken met je standpunten en omdat partijen andere partijen geen carte blanche willen geven om kiezers te bereiken. Daardoor zullen de kosten omhoog gaan en de effectiviteit van de advertenties omlaag.
 
 _Vind je dit soort data interessant? Kijk eens op [deze website](https://joren485.github.io/DutchPoliticalFacebookAdComparision/) waarop ik informatie over politieke advertenties op Facebook bijhoud._
 
