@@ -1,8 +1,7 @@
 ---
 layout: "page"
 title: "About"
+language: "en"
 ---
 
-* Joren Vrancken
-* [jorenvrancken@gmail.com](mailto:jorenvrancken@gmail.com)
-* [Gitub Repo](https://github.com/joren485/blog)
+A work in progress blog by Joren Vrancken. I am reachable at [jorenvrancken@gmail.com](mailto:jorenvrancken@gmail.com). This blogs is available at [Gitub](https://github.com/joren485/blog).
