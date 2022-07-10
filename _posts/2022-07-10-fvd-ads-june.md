@@ -6,7 +6,7 @@ author: "Joren Vrancken"
 lang: "nl"
 ---
 
-In de afgelopen twee maanden is er iets interessants aan de hand in de wereld van online politieke advertenties. 70% van alle [_impressies_](https://www.facebook.com/business/help/675615482516035) (het aantal keren dat advertenties getoond zijn aan gebruikers) van politieke partijen op Facebook en Instagram is namelijk van Forum voor Democratie. In een grafiekje ziet dit er zo uit:
+In de afgelopen twee maanden (15 mei 2022 tot 10 juli 2022) is er iets interessants aan de hand in de wereld van online politieke advertenties. 70% van alle [_impressies_](https://www.facebook.com/business/help/675615482516035) (het aantal keren dat advertenties getoond zijn aan gebruikers) van politieke partijen op Facebook en Instagram is namelijk van Forum voor Democratie. In een grafiekje ziet dit er zo uit:
 
 ![Impressies](/assets/fvd-ads-june/impressions.png)
 
@@ -59,7 +59,7 @@ Of het nu opzettelijk of per ongeluk is, FvD heeft vaker meer dan de helft van d
 | :--: | :--: |
 | ![COVID-19 Impressies](/assets/fvd-ads-june/impressions-covid.png) | ![Juli 2021 Impressies](/assets/fvd-ads-june/impressions-2021-07.png)|
 | :--: | :--: |
-| Aan het begin van de COVID-19 pandemie, adverteerde FvD veel (grappig genoeg voor harde maatregelen)[^0]. Ze hadden toen in twee maanden 69% van de impressies | In juli 2021 had FvD 55% van alle impressies. Deze advertenties gingen over algemene FvD standpunten. |
+| Aan het begin van de COVID-19 pandemie, adverteerde FvD veel (grappig genoeg voor harde maatregelen)[^0]. Ze hadden toen in twee maanden 69% van de impressies. | In juli 2021 had FvD 55% van alle impressies. Deze advertenties gingen over algemene FvD standpunten. |
 
 ### Waarom adverteren andere partijen niet meer buiten campagnetijd?
 Iedere Euro die je uitgeeft aan advertenties in de zomer van 2022, kan je niet meer uitgeven aan de provinciale statenverkiezingen in 2023. Partijen moeten een keuze maken over hoeveel geld ze willen uitgeven aan online advertenties en wanneer ze deze willen publiceren. De online marketing moet aansluiten met de politieke doelen van de partij. Als het doel is om een goed te scoren bij de provinciale statenverkiezingen, is het begrijpelijk dat je niet driekwart jaar van tevoren gaat adverteren.
