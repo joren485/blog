@@ -1,0 +1,87 @@
+---
+layout: post
+title:  "70% van de politieke Facebook advertenties in de afgelopen maanden waren van Forum voor Democratie"
+date:   2022-07-10
+author: "Joren Vrancken"
+lang: "nl"
+---
+
+<!-- Getallen of woorden -->
+
+In de afgelopen twee maanden is er iets interessants aan de hand in de wereld van online politieke advertenties. 70% van alle [_impressies_](https://www.facebook.com/business/help/675615482516035) (het aantal keren dat advertenties getoond zijn aan gebruikers) van politieke partijen op Facebook en Instagram is namelijk van Forum voor Democratie. In een grafiekje ziet dit er zo uit:
+
+![Impressies](/assets/fvd-ads-june/impressions.png)
+
+De blauwe lijn representeert het aantal keren dat FvD advertenties getoond zijn en de rode lijn het aantal keren dat de advertenties van alle andere partijen getoond zijn. Zoals we zien zijn er flink meer impressies van FvD. Alle andere partijen samen komen amper boven de 100000 impressies, terwijl FvD op 25 juni boven de 600000 zat.
+
+De advertenties van FvD in deze periode gaan voornamelijk over de oorlog in Oekraïne, inflatie en het stikstofbeleid. Bijvoorbeeld, deze twee recente advertenties deden het erg goed:
+
+| ![Voorbeelden van Advertenties](/assets/fvd-ads-june/example1.png) | ![Voorbeelden van Advertenties](/assets/fvd-ads-june/example2.png) |
+| :--: | :--: |
+| [Advertentie 403929668423881](https://www.facebook.com/ads/library/?id=403929668423881) | [Advertentie 432977668679361](https://www.facebook.com/ads/library/?id=432977668679361) |
+
+### Hoe komt het dat FvD zoveel procent van de impressies heeft?
+
+De grafiek hierboven roept de vraag op hoe FvD (qua zetel aantal in de Tweede Kamer een kleinere partij) de Facebook advertenties zo weten te domineren (in deze periode). Hier zijn twee redenen voor:
+
+1. De concurrentie (lees: andere partijen) adverteerde niet of weinig in deze periode. De meeste partijen adverteren namelijk alleen in verkiezingstijd. Dit kunnen we mooi zien op de volgende grafiek:
+
+    ![Verkiezingen](/assets/fvd-ads-june/elections.png)
+
+    We zien drie grote pieken die precies samenvallen met verkiezingen.
+
+    De zeshonderdduizend impressies van FvD op 25 juni is peanuts vergeleken met de miljoenen impressies tijdens campagnetijd (tijdens de verkiezingen in 2021 zelfs bijna dertig miljoen impressies op één dag). Als het geen campagnetijd is, heb je als politieke partij dus relatief weinig impressies nodig om een flink percentage van alle impressies te hebben.
+
+2. In tegenstelling tot het eerste punt, adverteren sommige partijen, waaronder FvD, wel veel buiten campagnetijd. Bijvoorbeeld, FvD adverteerde meer in de afgelopen twee maanden dan tijdens de gemeenteraadsverkiezingen van maart dit jaar:
+
+    ![Afgelopen maanden](/assets/fvd-ads-june/last-months.png)
+
+    FvD vindt online adverteren tijdens de boerenprotesten blijkbaar belangrijker dan tijdens de Gemeenteraadsverkiezingen. Dit geeft een interessant inzicht in de online marketing strategie van de partij.
+
+Deze twee punten samen genomen versterkt het effect dat FvD een flinke meerderheid van de impressies op Facebook krijgt, als ze buiten campagnetijd. Dit alles neemt niet weg dat FvD natuurlijk ook veel tijdens campagnetijd adverteert, maar ze adverteren (vergeleken met andere partijen) ook veel buiten campagnetijd.
+
+### Waarom adverteert FvD buiten campagnetijd?
+
+<!-- FvD weet expres of per ongeluk veel mensen te bereiken als niemand anders ze probeert te bereiken -->
+<!-- FvD vindt het belangrijker om te adverteren over een onderwerp dan tijdens verkiezingen -->
+<!-- Hoeveel kost dit FvD -->
+
+Alleen het online marketing team van FvD weet de strategie en doelen achter hun online marketing campagnes, maar wij kunnen wel een gokje wagen. Buiten campagnetijd adverteren heeft, zoals we zien in de eerste grafiek, een groot voordeel: weinig concurrentie.
+
+Tijdens verkiezingen worden stemmers doodgegooid met advertenties, spotjes en posters van partijen. Als je een keer door Facebook scrollt op verkiezingsdag krijg je misschien wel advertenties van GroenLinks, PvdA en D66 te zien. Een advertenties is waarschijnlijk minder effectief als je direct ook advertenties van de concurrent ziet. Maar als je adverteert, terwijl anderen weinig adverteren, is de kans groot dat jouw advertenties de enige politieke advertenties zijn die de gebruikers die dag zien.
+
+Daarnaast is het een stuk goedkoper. Facebook advertenties zijn eigenlijk een soort veiling. Iedere keer als een gebruiker Facebook of Instagram opent, wordt een razendsnelle veiling gehouden tussen alle organisaties die hebben aangegeven deze persoon een advertentie te willen tonen. En hoe meer geïnteresseerde adverteerders, hoe hoger de prijs. Dit zien we duidelijk in de volgende twee advertenties van FvD die aan ongeveer evenveel mensen zijn getoond (tussen de 800000 en 900000 impressies):
+
+| ![Goedkope advertentie](/assets/fvd-ads-june/example_ad_cheap.png) | ![Dure advertentie](/assets/fvd-ads-june/example_ad_2021_elections.png) |
+| :--: | :--: |
+| [Deze advertentie](https://www.facebook.com/ads/library/?id=1137440176639095) was actief van 2020-07-22 t/m 2020-07-26 en kostte tussen de € 2000 en € 2500.| [Deze advertentie](https://www.facebook.com/ads/library/?id=493868091608806) was actief op het hoogtepunt van verkiezingen (2021-03-11 t/m 2021-03-16) en kostte tussen de € 8000 en € 9000. |
+
+Als je buiten campagnetijd adverteert, heb je dus een enorm percentage van alle politieke impressies te pakken voor weinig geld. Tussen 15 mei en 10 juli heeft FvD tussen de € 26200 en € 35180 uitgegeven, vergeleken met ongeveer € 250000 in maart 2021.
+
+#### Meer voorbeelden van dit fenomeen
+Of het nu opzettelijk of per ongeluk is, FvD heeft vaker meer dan de helft van de impressies in een periode. Twee voorbeelden van zulke periodes zijn:
+
+| 2020-02-01 t/m 2020-04-01 | 2021-07-01 t/m 2021-08-01 |
+| :--: | :--: |
+| ![COVID-19 Impressies](/assets/fvd-ads-june/impressions-covid.png) | ![Juli 2021 Impressies](/assets/fvd-ads-june/impressions-2021-07.png)|
+| :--: | :--: |
+| Aan het begin van de COVID-19 pandemie, adverteerde FvD veel (grappig genoeg voor harde maatregelen)[^0]. Ze hadden toen in twee maanden 69% van de impressies | In juli 2021 had FvD 55% van alle impressies. Deze advertenties gingen over algemene FvD standpunten. |
+
+### Waarom adverteren andere partijen niet meer buiten campagnetijd?
+Iedere Euro die je uitgeeft aan advertenties in de zomer van 2022, kan je niet meer uitgeven aan de Provinciale statenverkiezingen in 2023. Partijen moeten een keuze maken over hoeveel geld ze willen uitgeven aan online advertenties en wanneer ze deze willen publiceren. FvD maakt bijvoorbeeld de keuze dat advertenties tijdens de boerenprotesten beter hun politieke doelen helpen bereiken dan advertenties tijdens de Gemeenteraadsverkiezingen. Andere partijen maken een andere inschatting (of denken er simpelweg niet over na). Wat de juiste keuze is, is een open vraag. Sommige politieke doelen zijn daarbij ook meetbaarder (bijv. nieuwe leden en stemmen) dan andere (bijv. naamsbekendheid en beïnvloeding van publieke opinie). We hebben gezien dat de keuze van FvD in ieder geval kosteneffectief is.
+
+Mijn verwachting is dat andere partijen FvD zullen volgen. En dat de prijzen daardoor omhoog schieten en de effectiviteit van de advertenties omlaag.
+
+_Vind je dit soort data interessant? Kijk eens op [deze website](https://joren485.github.io/DutchPoliticalFacebookAdComparision/) waarop ik informatie over politieke advertenties op Facebook bijhoud._
+
+---
+
+**Disclaimer**: Deze blogpost is gebaseerd op data van de [Facebook Ad Library](https://www.facebook.com/ads/library/). Facebook levert helaas geen precieze data maar een reeks waardes (bijvoorbeeld, een advertentie heeft tussen de tweeduizend en drieduizend impressies). Voor de grafieken en statistieken zijn de gemiddeldes van deze reeksen gebruikt.
+
+---
+
+[^0]: Aan het begin van de pandemie was FvD aan het adverteren voor flinke maatregelen. Deze advertentie is bijvoorbeeld meer dan één miljoen keer getoond:
+
+    | ![COVID-19 Ad](/assets/fvd-ads-june/example_ad_covid.png) |
+    | :--: |
+    | [Advertentie 486951991976352](https://www.facebook.com/ads/library/?id=486951991976352) |
