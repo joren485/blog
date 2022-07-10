@@ -48,7 +48,7 @@ Daarnaast is het een stuk goedkoper. Facebook advertenties zijn eigenlijk een so
 | :--: | :--: |
 | [Deze advertentie](https://www.facebook.com/ads/library/?id=1137440176639095) was actief van 2020-07-22 t/m 2020-07-26 en kostte tussen de € 2000 en € 2500.| [Deze advertentie](https://www.facebook.com/ads/library/?id=493868091608806) was actief op het hoogtepunt van verkiezingen (2021-03-11 t/m 2021-03-16) en kostte tussen de € 8000 en € 9000. |
 
-Adverteren direct voorafgaand aan verkiezingen kost dus ongeveer vier keer zoveel.
+Adverteren op Facebook direct voorafgaand aan verkiezingen kost dus ongeveer vier keer meer dan adverteren buiten verkiezingstijd.
 
 Door buiten campagnetijd te adverteren, pakt Fvd dus een enorm percentage van alle politieke impressies te pakken voor weinig geld. Tussen 15 mei en 10 juli heeft FvD ongeveer de € 30000 uitgegeven, vergeleken met ongeveer € 250000 in maart 2021. En in maart 2021 kregen veel van die mensen ook nog eens advertenties van veel andere partijen.
 
