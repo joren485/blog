@@ -19,7 +19,7 @@ De advertenties van FvD in deze periode gaan voornamelijk over de oorlog in Oekr
 | [Advertentie 403929668423881](https://www.facebook.com/ads/library/?id=403929668423881) | [Advertentie 432977668679361](https://www.facebook.com/ads/library/?id=432977668679361) |
 
 ### Hoe komt het dat FvD zoveel procent van de impressies heeft?
-De grafiek hierboven roept de vraag op hoe FvD (als kleinere partij qua zetel aantal) de Facebook advertenties zo weten te domineren (in deze periode). Hier zijn twee redenen voor:
+De grafiek hierboven roept de vraag op hoe FvD (als kleinere partij qua zetel aantal) de Facebook advertenties zo weet te domineren (in deze periode). Hier zijn twee redenen voor:
 
 1. De concurrentie (lees: andere partijen) adverteerde niet of weinig in deze periode. De meeste partijen adverteren namelijk alleen in verkiezingstijd. Dit kunnen we mooi zien op de volgende grafiek:
 
@@ -50,7 +50,7 @@ Daarnaast is het een stuk goedkoper. Facebook advertenties zijn eigenlijk een so
 
 Adverteren op Facebook direct voorafgaand aan verkiezingen kost dus ongeveer vier keer meer dan adverteren buiten verkiezingstijd.
 
-Door buiten campagnetijd te adverteren, pakt Fvd dus een enorm percentage van alle politieke impressies te pakken voor weinig geld. Tussen 15 mei en 10 juli heeft FvD ongeveer de € 30000 uitgegeven, vergeleken met ongeveer € 250000 in maart 2021. En in maart 2021 kregen veel van die mensen ook nog eens advertenties van veel andere partijen.
+Door buiten campagnetijd te adverteren, pakt Fvd dus een enorm percentage van alle politieke impressies te pakken voor weinig geld. Tussen 15 mei en 10 juli heeft FvD ongeveer de € 30000 uitgegeven, vergeleken met ongeveer € 250000 in maart 2021. En in maart 2021 kregen veel van die mensen ook nog eens advertenties van veel andere partijen te zien.
 
 #### Meer voorbeelden van dit fenomeen
 Of het nu opzettelijk of per ongeluk is, FvD heeft vaker meer dan de helft van de impressies in een periode. Twee voorbeelden van zulke periodes zijn:
@@ -59,12 +59,12 @@ Of het nu opzettelijk of per ongeluk is, FvD heeft vaker meer dan de helft van d
 | :--: | :--: |
 | ![COVID-19 Impressies](/assets/fvd-ads-june/impressions-covid.png) | ![Juli 2021 Impressies](/assets/fvd-ads-june/impressions-2021-07.png)|
 | :--: | :--: |
-| Aan het begin van de COVID-19 pandemie, adverteerde FvD veel (grappig genoeg voor harde maatregelen)[^0]. Ze hadden toen in twee maanden 69% van de impressies. | In juli 2021 had FvD 55% van alle impressies. Deze advertenties gingen over algemene FvD standpunten. |
+| Aan het begin van de COVID-19 pandemie, adverteerde FvD veel (ironisch genoeg voor harde maatregelen)[^0]. Ze hadden toen in twee maanden 69% van de impressies. | In juli 2021 had FvD 55% van alle impressies. Deze advertenties gingen over algemene FvD standpunten. |
 
 ### Waarom adverteren andere partijen niet meer buiten campagnetijd?
-Iedere Euro die je uitgeeft aan advertenties in de zomer van 2022, kan je niet meer uitgeven aan de provinciale statenverkiezingen in 2023. Partijen moeten een keuze maken over hoeveel geld ze willen uitgeven aan online advertenties en wanneer ze deze willen publiceren. De online marketing moet aansluiten met de politieke doelen van de partij. Als het doel is om een goed te scoren bij de provinciale statenverkiezingen, is het begrijpelijk dat je niet driekwart jaar van tevoren gaat adverteren.
+Iedere Euro die je uitgeeft aan advertenties in de zomer van 2022, kan je niet meer uitgeven aan de provinciale statenverkiezingen in 2023. Partijen moeten een keuze maken over hoeveel geld ze willen uitgeven aan online advertenties en wanneer ze deze willen publiceren. De online marketing moet aansluiten met de politieke doelen van de partij. Als het doel is om goed te scoren bij de provinciale statenverkiezingen, is het begrijpelijk dat je niet driekwart jaar van tevoren gaat adverteren.
 
-FvD maakt de keuze dat advertenties tijdens de boerenprotesten beter hun politieke doelen helpen bereiken dan advertenties tijdens de gemeenteraadsverkiezingen. Andere partijen maken een andere inschatting (of denken er simpelweg niet over na). Wat de juiste keuze is, is een open vraag. Sommige politieke doelen zijn daarbij ook meetbaarder (bijv. nieuwe leden en stemmen) dan andere (bijv. naamsbekendheid en beïnvloeding van de publieke opinie). We hebben gezien dat de keuze van FvD in ieder geval kosteneffectief is.
+FvD maakt de keuze dat advertenties tijdens de boerenprotesten beter hun politieke doelen helpen bereiken dan advertenties tijdens de gemeenteraadsverkiezingen. Andere partijen maken een andere inschatting (of denken er simpelweg niet over na). Wat de juiste keuze is, is een open vraag. Sommige politieke doelen zijn daarbij ook meetbaarder (bijv. nieuwe leden werven en stemmen trekken) dan andere (bijv. naamsbekendheid en beïnvloeding van de publieke opinie). We hebben gezien dat de keuze van FvD in ieder geval kosteneffectief is.
 
 Mijn verwachting is dat andere partijen FvD zullen volgen. Simpelweg omdat het een goedkope manier is om mensen direct te bereiken met je standpunten en omdat partijen andere partijen geen carte blanche willen geven om kiezers te bereiken. Daardoor zullen de kosten omhoog gaan en de effectiviteit van de advertenties omlaag.
 
@@ -72,7 +72,7 @@ _Vind je dit soort data interessant? Kijk eens op [deze website](https://joren48
 
 ---
 
-**Disclaimer**: Deze blogpost is gebaseerd op data van de [Facebook Ad Library](https://www.facebook.com/ads/library/). Facebook levert helaas geen precieze data maar een reeks waardes (bijvoorbeeld, een advertentie heeft tussen de tweeduizend en drieduizend impressies). Voor de grafieken en statistieken zijn de gemiddeldes van deze reeksen gebruikt.
+**Disclaimer**: Deze blogpost is gebaseerd op data van de [Facebook Ad Library](https://www.facebook.com/ads/library/). Facebook levert helaas geen precieze data maar een reeks waardes (bijvoorbeeld, een advertentie heeft tussen de 2000 en 3000 impressies). Voor de grafieken en statistieken zijn de gemiddeldes van deze reeksen gebruikt.
 
 ---
 
