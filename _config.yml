@@ -9,3 +9,8 @@ author:
 
 header_pages:
   - "about.md"
+
+plugins:
+  - "jekyll-redirect-from"
+
+permalink: "/posts/:title/"
