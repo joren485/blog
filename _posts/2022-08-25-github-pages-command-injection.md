@@ -6,7 +6,7 @@ author: "Joren Vrancken"
 lang: "en"
 ---
 
-Recently, I participated in the [GitHub Bug Bounty](https://bounty.github.com/) (run through [HackerOne](https://hackerone.com/github)). This is a writeup of a command injection bug I discovered.
+Recently, I participated in the [GitHub Bug Bounty](https://bounty.github.com/) (run through [HackerOne](https://hackerone.com/github)). This is a writeup of a command injection bug I discovered in GitHub Pages build process.
 
 ### GitHub Pages
 [GitHub Pages](https://pages.github.com/) is a static content hosting service. It allows users to host the contents of their repositories to `username.github.io` or a custom domain. It is widely used for hosting simple static pages, such as documentation and blogs (e.g. this blog is hosted on GitHub Pages).
