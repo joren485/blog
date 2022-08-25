@@ -6,12 +6,12 @@ author: "Joren Vrancken"
 lang: "en"
 ---
 
-Recently, I participated in the [GitHub Bug Bounty](https://bounty.github.com/) (run through [HackerOne](https://hackerone.com/github)). This is a writeup of a command injection bug I discovered in GitHub Pages build process.
+Recently, I participated in the [GitHub Bug Bounty program](https://bounty.github.com/) (run through [HackerOne](https://hackerone.com/github)). This is a writeup of a command injection bug I discovered in GitHub Pages build process.
 
 ### GitHub Pages
-[GitHub Pages](https://pages.github.com/) is a static content hosting service. It allows users to host the contents of their repositories to `username.github.io` or a custom domain. It is widely used for hosting simple static pages, such as documentation and blogs (e.g. this blog is hosted on GitHub Pages).
+[GitHub Pages](https://pages.github.com/) is a static content hosting service. It allows users to host the content of their repositories at `username.github.io` or a custom domain. It is widely used for hosting simple static pages, such as documentation and blogs (e.g. this blog is hosted on GitHub Pages).
 
-To help users host nice looking content, GitHub Pages supports [Jekyll](https://jekyllrb.com/), a static site generator platform. By using Jekyll, you do not have to write HTML and CSS files for your blogs directly, but you can write Markdown and Jekyll turns it into HTML files for you. [Jekyll supports themes](https://jekyllrb.com/docs/themes/), a feature that helps users apply the same templates and style across their Jekyll websites.
+To help users host nice looking content, GitHub Pages supports [Jekyll](https://jekyllrb.com/), a static site generator platform. With Jekyll, you do not have to write HTML and CSS for your blog, but you can write Markdown and Jekyll will turn it into HTML files for you. To make it easier to apply the same templates and style across a website, [Jekyll supports themes](https://jekyllrb.com/docs/themes/).
 
 All settings of a Jekyll site (e.g. the theme) are stored in a YAML configuration file. GitHub Pages automates parts of the Jekyll setup (including setting some settings).
 
