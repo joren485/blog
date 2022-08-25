@@ -31,8 +31,10 @@ This URL as three parameters:
 * `source` is the selected branch in the Branch settings.
 * `source_dir` is the selected directory in the Branch settings.
 
-If we click this _Change theme_ button, we are taken to a new webpage that previews multiple Jekyll themes (it should be noted that access to this page requires administrative privileges on the repository. We discuss this later):
+If we click the _Change theme_ button, we are taken to a new webpage that shows previews of multiple Jekyll themes:
 ![GitHub Pages Theme Selector](/assets/github-pages-command-injection/select-theme.png)
+
+Note that access to this page requires administrative privileges on the repository. We discuss this later.
 
 When we are done picking a theme and click the _Select theme_ button, GitHub makes a `POST` request:
 
