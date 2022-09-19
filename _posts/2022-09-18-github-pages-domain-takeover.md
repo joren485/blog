@@ -1,6 +1,6 @@
 ---
 layout: "post"
-title:  "An in-depth guide to GitHub Pages (sub)domain takeovers"
+title:  "An in-depth guide to GitHub Pages domain takeovers"
 date:   "2022-09-18"
 author: "Joren Vrancken"
 lang: "en"
@@ -17,7 +17,7 @@ Setting up a custom domain for a GitHub Pages domain takes two steps:
 1. Pointing DNS records for the domain at the GitHub Pages servers.
 2. Adding the domain to the GitHub Pages settings of a GitHub repository.
 
-GitHub has extensive [documentation](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site) on how to configure GitHub Pages and custom domains. There is no point in repeating their documentation here, but I will cover the most important parts and some nuances.
+GitHub has extensive [documentation](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site) on how to configure GitHub Pages and custom domains. There is no point in repeating their documentation here, but we will cover the most important parts and some nuances.
 
 #### Configuring the DNS records of a custom domain
 GitHub differentiates between two types of domains:
@@ -64,7 +64,7 @@ GitHub Pages Health Check performs multiple checks on the DNS records of a domai
 
 This means that the recommended setup is not required. For example, we can set up subdomains using `A` records, or use reverse proxies (such as Cloudflare).
 
-The verification doesn't even need to succeed for GitHub to start recognizing the domain. For example, I added a domain `asdf.example.com` to a repository with a file `foo` in it. As no `A` or `CNAME` record exist for `asdf.example.com`, it does not pass the verification. But GitHub does recognize it:
+The verification doesn't even need to succeed for GitHub to start recognizing the domain. Let's say we added a domain `asdf.example.com` to a repository with a file `foo` in it. As no `A` or `CNAME` record exist for `asdf.example.com`, it does not pass the verification. But GitHub does recognize it:
 ```Shell
 $ curl -H "Host: asdf.example.com" octocat.github.io/foo
 bar
@@ -84,7 +84,7 @@ Not every domain that points to GitHub Pages and returns a 404 is vulnerable. Th
 1. The domain should return a 404 status code.
 2. The 404 message should read "There isn't a GitHub Pages site here."
 
-    If the domain is used to host a GitHub Pages site, but the file you requested is not found, you get a similar but different 404 error:
+    If the domain is used to host a GitHub Pages site, but the requested file is not found, we get a similar but different 404 error:
     ![](/assets/github-pages-domain-takeover/404-misconfiguration.png)
 3. The domain should not already be taken (it can be taken, but active).
   * We can check whether a domain is used by a public GitHub repository, by searching for `example.com filename:CNAME` in GitHub.
@@ -117,9 +117,9 @@ The settings should look something like this:
 ![](/assets/github-pages-domain-takeover/github-pages-settings.png)
 
 ### Countermeasures
-The best way to protect yourself against domain takeovers is by not pointing unused domains at GitHub Pages.
+The best way to protect yourself against domain takeovers is by not pointing unused domains at the GitHub Pages servers.
 
-[GitHub also allows users to verify that they own a domain](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/verifying-your-custom-domain-for-github-pages). Unfortunately, this verification process has a few flaws:
+[GitHub also allows users to verify that they own a domain](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/verifying-your-custom-domain-for-github-pages). Unfortunately, this verification feature has some flaws:
 * The verification only works for a domain and its _immediate_ subdomains. This means that if we verify `example.com`, `example.com` and `sub.example.com` are protected from domain takeovers, but `sub1.sub0.example.com` is not.
 
     This is why GitHub warns users against using wildcard domains. A wildcard domain is always vulnerable, even if it is verified, because wildcards apply to multiple subdomain levels (e.g. `*.example.com` matches `sub1.sub0.example.com`), but the verification only applies to one subdomain level.
@@ -128,10 +128,10 @@ The best way to protect yourself against domain takeovers is by not pointing unu
 
 * Nobody seems to verify their domain for GitHub Pages. I analyzed 2463 domains used to host GitHub Pages. A whopping 17 (_0.7%_) of them verified their domain. Even if my analysis is of by a factor of 10, practically no one is using this.
 
-In the end, It is important to remember that GitHub does not own the domains, the- users do and as such, the responsiblity for protecting them lies on the owner of the domains. The only step that GitHub could take to fully solve this problem is by forcing users to verify their domains ([like GitLab does](https://docs.gitlab.com/ee/user/project/pages/custom_domains_ssl_tls_certification/)).
+In the end, It is important to remember that the users and not GitHub own the domains, and as such, the responsiblity for protecting them lies on the users. The only step that GitHub could take to truly solve this problem is by forcing users to verify their domains ([like GitLab does](https://docs.gitlab.com/ee/user/project/pages/custom_domains_ssl_tls_certification/)).
 
 ### Finding vulnerable domains
-As I said in the introduction, there are tens of thousands of vulnerable domains. To identify these, we need a way to search for patterns in data on domains. Two great services that provide data on domains are:
+As I said in the introduction, there are tens of thousands of vulnerable domains. We can identify these by looking for patterns that match Github Pages in domain datasets.  Two great services that provide data on domains are:
 
 * [SecurityTrails](https://securitytrails.com/): SecurityTrails collects that on domains and makes it searchable. For example, DNS history and subdomains. It also provides a reverse DNS search engine that provides all domains that point to a specific IP address. We can use SecurityTrails to identify [domains that point to `185.199.108.153`](https://securitytrails.com/list/ip/185.199.108.153) (and the other GitHub Pages IP addresses).
 
