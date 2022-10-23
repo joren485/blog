@@ -3,10 +3,10 @@ layout: "post"
 title:  "An in-depth guide to GitHub Pages domain takeovers"
 date:   "2022-09-18"
 author: "Joren Vrancken"
-lang: "en"
+lang: "en-us"
 ---
 
-[GitHub Pages](https://pages.github.com/) is a static content hosting service by GitHub. As it is free and integrates with GitHub repositories, it is a popular for hosting blogs, documentation and the like. By default, GitHub Pages content is hosted on `username.github.io`, but users can also conifgure their own domains to host content (e.g. this blog is hosted via GitHub Pages).
+[GitHub Pages](https://pages.github.com/) is a static content hosting service by GitHub. As it is free and integrates with GitHub repositories, it is a popular for hosting blogs, documentation and the like. By default, GitHub Pages content is hosted on `username.github.io`, but users can also configure their own domains to host content (e.g. this blog is hosted via GitHub Pages).
 
 As GitHub does not require users to verify ownership over the domains they use, domains configured for GitHub Pages are vulnerable to domain takeovers. This is common knowledge and has been well-documented (e.g. [can-i-take-over-xyz](https://github.com/EdOverflow/can-i-take-over-xyz/issues/37), [a HackerOne blog](https://www.hackerone.com/application-security/guide-subdomain-takeovers)).
 
@@ -40,7 +40,7 @@ To support IPv6, users can create `AAAA` records pointing to (one of) the follow
 2606:50c0:8003::153
 ```
 
-For subdomains, GitHub recommends creating a `CNAME` record that points to `username.github.io`. `username` does not have to be a user's actuall username, as `*.github.io` has wildcard records that points to the above IP addresses:
+For subdomains, GitHub recommends creating a `CNAME` record that points to `username.github.io`. `username` does not have to be a user's actual username, as `*.github.io` has wildcard records that points to the above IP addresses:
 ```Shell
 $ drill -Q A "not-an-existing-user-.github.io"
 185.199.111.153
@@ -53,7 +53,7 @@ $ drill -Q A "not-an-existing-user-.github.io"
 Every repository has a tab for GitHub Pages settings ("Pages"). This tab includes a section that allows users to submit their custom domain. For example, these are the settings for this blog:
 ![](/assets/github-pages-domain-takeover/github-pages-settings.png)
 
-When a custom domain is added to a repository, GitHub automaically commits a file `CNAME` to the root of the repository with the domain name (the file is also called `CNAME` in case `A` records are used), even if the domain verification fails.
+When a custom domain is added to a repository, GitHub automatically commits a file `CNAME` to the root of the repository with the domain name (the file is also called `CNAME` in case `A` records are used), even if the domain verification fails.
 
 ##### Domain Verification
 After a user submits a custom domain, GitHub verifies that it is correctly configured and deploys a new GitHub Pages build (with [GitHub Actions](https://github.com/features/actions) workflow). GitHub Pages uses [GitHub Pages Health Check](https://github.com/github/pages-health-check) for verification.
@@ -88,13 +88,13 @@ Not every domain that points to GitHub Pages and returns a 404 is vulnerable. Th
     ![](/assets/github-pages-domain-takeover/404-misconfiguration.png)
 3. The domain should not already be taken (it can be taken, but active).
   * We can check whether a domain is used by a public GitHub repository, by searching for `example.com filename:CNAME` in GitHub.
-  * Unfortunetly, domains can also be used by private repositories. We have no way of knowing this (without trying to take over the domain).
+  * Unfortunately, domains can also be used by private repositories. We have no way of knowing this (without trying to take over the domain).
   * If we try to add a taken domain to a repository, we will get the following error:
     ```
     The custom domain `example.com` is already taken. If you are the owner of this domain, check out https://docs.github.com/pages/configuring-a-custom-domain-for-your-github-pages-site/verifying-your-custom-domain-for-github-pages for information about how to verify and release this domain.
     ```
 
-However, these heurisics are not conclusive. Even if all these heuristics pass, we might get the following error when trying to take over a domain:
+However, these heuristics are not conclusive. Even if all these heuristics pass, we might get the following error when trying to take over a domain:
 ```
 You must verify your domain domain.com before being able to use it. Check out https://docs.github.com/pages/configuring-a-custom-domain-for-your-github-pages-site/verifying-your-custom-domain-for-github-pages for more information.
 ```
@@ -109,7 +109,7 @@ Taking over a domain is as simple as adding the domain to a repository you own.
 3. Go to the Pages tab.
 4. Enable GitHub pages (if it is not already enabled).
 5. Add the domain in the custom domain section.
-  - Optionally enable HTTPs, if availble.
+  - Optionally enable HTTPS, if available.
 6. Wait for the GitHub Actions workflow to complete the build.
 7. Visit the domain to see the `README.md` hosted.
 
@@ -128,10 +128,10 @@ The best way to protect yourself against domain takeovers is by not pointing unu
 
 * Nobody seems to verify their domain for GitHub Pages. I analyzed 2463 domains used to host GitHub Pages. A whopping 17 (_0.7%_) of them verified their domain. Even if my analysis is of by a factor of 10, practically no one is using this.
 
-In the end, It is important to remember that the users and not GitHub own the domains, and as such, the responsiblity for protecting them lies on the users. The only step that GitHub could take to truly solve this problem is by forcing users to verify their domains ([like GitLab does](https://docs.gitlab.com/ee/user/project/pages/custom_domains_ssl_tls_certification/)).
+In the end, It is important to remember that the users and not GitHub own the domains, and as such, the responsibility for protecting them lies on the users. The only step that GitHub could take to truly solve this problem is by forcing users to verify their domains ([like GitLab does](https://docs.gitlab.com/ee/user/project/pages/custom_domains_ssl_tls_certification/)).
 
 ### Finding vulnerable domains
-As I said in the introduction, there are tens of thousands of vulnerable domains. We can identify these by looking for patterns that match Github Pages in domain datasets.  Two great services that provide data on domains are:
+As I said in the introduction, there are tens of thousands of vulnerable domains. We can identify these by looking for patterns that match GitHub Pages in domain datasets.  Two great services that provide data on domains are:
 
 * [SecurityTrails](https://securitytrails.com/): SecurityTrails collects that on domains and makes it searchable. For example, DNS history and subdomains. It also provides a reverse DNS search engine that provides all domains that point to a specific IP address. We can use SecurityTrails to identify [domains that point to `185.199.108.153`](https://securitytrails.com/list/ip/185.199.108.153) (and the other GitHub Pages IP addresses).
 
