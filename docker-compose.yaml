@@ -1,0 +1,13 @@
+---
+
+version: '3'
+
+services:
+  jekyll:
+    image: "jekyll/jekyll"
+    command: "jekyll serve --watch --drafts"
+    # command: "bundle update"
+    ports:
+      - "127.0.0.1:4000:4000"
+    volumes:
+      - ".:/srv/jekyll"
