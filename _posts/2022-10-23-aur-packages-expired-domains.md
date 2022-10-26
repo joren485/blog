@@ -1,7 +1,7 @@
 ---
 layout: "post"
 title:  "Hijacking AUR Packages by Searching for Expired Domains"
-date:   "2022-10-23"
+date:   "2022-10-26"
 author: "Joren Vrancken"
 lang: "en-us"
 ---
