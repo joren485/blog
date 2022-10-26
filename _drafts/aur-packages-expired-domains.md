@@ -6,9 +6,9 @@ author: "Joren Vrancken"
 lang: "en-us"
 ---
 
-The [Arch User Repository](https://aur.archlinux.org/) (AUR) is a software repository for Arch Linux. It differs from the official Arch Linux repositories in that its packages are provided by its users and not officially supported by the Arch Linux.
+The [Arch User Repository](https://aur.archlinux.org/) (AUR) is a software repository for Arch Linux. It differs from the official Arch Linux repositories in that its packages are provided by its users and not officially supported by Arch Linux.
 
-The lack of support is more a feature than a bug, because it allows the AUR to contain packages that are difficult to support (e.g. because of licensing issues) or are only used by a handful of users. However, the lack of support also means that there is less quality control and [bad actors can introduce malicious packages](https://securityaffairs.co/wordpress/74352/malware/arch-linux-aur-malware.html). To warn users of this risk, the AUR has a big disclaimer on the front page:
+The lack of support is more a feature than a bug, because it allows the AUR to contain packages that are difficult to support (e.g. because of licensing issues) or are only used by a handful of users. However, lack of support also means less quality control, which [allows bad actors to introduce malicious packages](https://securityaffairs.co/wordpress/74352/malware/arch-linux-aur-malware.html). To warn users of this risk, the AUR has a big disclaimer on the front page:
 > **DISCLAIMER: AUR packages are user produced content. Any use of the provided files is at your own risk.**
 
 There are multiple ways to introduce a malicious package (or malicious changes to a legitimate package) into the AUR. For example, by becoming the maintainer of orphaned packages (i.e. packages that are no longer supported by their previous maintainers) or typosquatting popular package names.
@@ -16,7 +16,7 @@ There are multiple ways to introduce a malicious package (or malicious changes t
 Another option is to find packages that use URLs with expired domains during their build process, register the domain and host malicious files. How many of packages are vulnerable to such an attack? Let's find out!
 
 ### `PKGBUILD` and `SRCINFO` files
-The [Arch Build System](https://wiki.archlinux.org/title/Arch_Build_System) is the packaging system of Arch Linux. It is used in the official repositories, but also in the AUR. In the Arch Build System, packages consist of (at least) two files:
+The [Arch Build System](https://wiki.archlinux.org/title/Arch_Build_System) is the packaging system of Arch Linux. It is used for the official repositories, but also for the AUR. In the Arch Build System, packages consist of (at least) two files:
 
 1. [`PKGBUILD`](https://wiki.archlinux.org/title/PKGBUILD): A Bash script that defines variables and functions required to build and install a package. For example, the `PKGBUILD` of the [zoom](https://aur.archlinux.org/packages/zoom) package:
 
@@ -97,14 +97,16 @@ The [Arch Build System](https://wiki.archlinux.org/title/Arch_Build_System) is t
     pkgname = zoom
     ```
 
-As we are interested in the URLs of the installation files of a package, we are looking for the `source` variables. The `source` variable defines the location of the installation files as an array. For example, Zoom has one source: `https://cdn.zoom.us/prod/5.12.2.4816/zoom_x86_64.pkg.tar.xz`. Architecture-specific sources can be defined using an architecture-specific array (e.g. `source_x86_64`).
+As we are interested in the URLs of the installation files of a package, we are looking for the `source` variable. The `source` variable defines the URLs (and filenames) to the necessary installation files. During installation, the URLs in the `source` are downloaded and installed (using functions provided in the `PKGBUILD`). For example, Zoom has one source: `https://cdn.zoom.us/prod/5.12.2.4816/zoom_x86_64.pkg.tar.xz`.
+
+Packages can define multiple URLs and filenames in the `source` variables. Packages can also specify architecture-specific sources by using an architecture-specific array (e.g. `source_x86_64`).
 
 ### Getting all `.SRCINFO` files
 At the time of writing, there are _85793_ packages in the AUR (the AUR provides a list of all packages at [https://aur.archlinux.org/packages.gz](https://aur.archlinux.org/packages.gz)). We will need to somehow get the `.SRCINFO` for each of them.
 
 The AUR has an [API](https://wiki.archlinux.org/title/Aurweb_RPC_interface). However, the API has [a rate limit of 4000 requests per day](https://wiki.archlinux.org/title/Aurweb_RPC_interface#Limitations) (per IP address), making it unsuited for getting a full copy of the AUR.
 
-Luckily, since July of this year, Arch Linux provides [an official mirror of the AUR](https://github.com/archlinux/aur) on GitHub. This is a huge repository (with a whopping _106670_ branches), that we can clone to get a full local copy (i.e. the `PKGBUILD` and `.SRCINFO` files) of the AUR. We can than use a library like [GitPython](https://gitpython.readthedocs.io/en/stable/index.html) to automatically traverse the Git repository and get the `.SRCINFO` file for each package:
+Luckily, since July of this year, Arch Linux provides [an official mirror of the AUR](https://github.com/archlinux/aur) on GitHub. This is a huge repository (with a whopping _106670_ branches), that we can clone to get a full local copy (i.e. the `PKGBUILD` and `.SRCINFO` files of all packages) of the AUR. We can than use a library like [GitPython](https://gitpython.readthedocs.io/en/stable/index.html) to automatically traverse the Git repository and get the `.SRCINFO` file for each package:
 
 ```python
 from git import Repo
@@ -121,7 +123,7 @@ for i, ref in enumerate(refs):
     srcinfo = repo.commit(ref.commit).tree[".SRCINFO"].data_stream.read()
 
     # In this example, we just print the .SRCINFO data,
-    # but we could save them as files or in a SQLite database for further analysis.
+    # but we could save them (e.g. as files or in a database) for further analysis.
     print(package_name)
     print(srcinfo)
 ```
@@ -138,9 +140,9 @@ The `source` variable does not only define the domain where a source files can b
 * FTP (483 sources)
 * SVN (81 sources)
 
-These sources have 5333 unique root domains that we can check for expiration.
+We parse the domains from all these sources (using [`urlparse`](https://docs.python.org/3/library/urllib.parse.html) and [`tldextract`](https://github.com/john-kurkowski/tldextract)) to find 6926 unique domains and 5332 unique root domains. As we are looking for expired domains, we only care about root domains.
 
-To find expired domains, we first filter out any domains have DNS `A` records, as they are still in use. To quickly perform many DNS requests we use [blechschmidt/massdns](https://github.com/blechschmidt/massdns). This is a great tool that allows us to resolve thousands of domains in seconds:
+Unfortunately, there is no standardized way to check if a domain is available. The WHOIS responses from most popular TLDs contain something like "No match for domain" for available domains, but this is not true for all TLDs. A good first step is to filter out any domains that have an DNS `A` record set, as those domains will (most likely) still be in use. To quickly perform many DNS requests we use [blechschmidt/massdns](https://github.com/blechschmidt/massdns). This is a great tool that allows us to resolve thousands of domains in seconds:
 
 ```bash
 $ massdns \
@@ -151,7 +153,7 @@ $ massdns \
   data/root-domains.txt
 ```
 
-After this, we are left with only 44 (root) domains that do not have a `A` record associated with them. We can either manually check the WHOIS records for these domains or use some domain availability API (e.g. [Domainr](https://domainr.com/)) to check if a domain has expired.
+After this, we are left with only 44 domains that do not have a `A` record associated with them. We can either manually check the WHOIS records for these domains or use some domain availability API (e.g. [Domainr](https://domainr.com/)) to check if a domain has expired.
 
 After filtering out some false positives, we are left with the 14 expired domains that are used in 20 packages:
 
@@ -178,13 +180,13 @@ Are all of these 20 packages hijackable by just registering the expired domains?
 
 `PKGBUILD` files need to contain a hash (either CRC32, MD5, SHA-1, SHA-256, SHA-224, SHA-384, SHA-512 or BLAKE2) of each source that will be used to check the integrity of the source files during installation. If a source does not match the provided hash, the installation will abort.
 
-This means that if we hijack a package, we cannot host arbitrary files we want and expect them to be successfully installed. They would need to match the hash value.
+This means that if we register an expired domain used by a package, we cannot host arbitrary files and expect them to be successfully installed. They would have to match the hash value.
 
 There are no practical [pre-image attacks](https://en.wikipedia.org/wiki/Preimage_attack) against any of these hashes (with the notable exception of CRC32, which is not a cryptographic hash but an error correction code. However, CRC32 is only used by 16 packages), so we need to find a way to around the checksum verification altogether:
 
-* Users can skip the checksum verification by passing the `--skipinteg` or the `--skipchecksums` option to [`makepkg`](https://man.archlinux.org/man/makepkg.8.en) (the command to install packages using `PKGBUILD` files) during the installation process.
+* Users can skip the checksum verification when installing packages by passing the `--skipinteg` or the `--skipchecksums` option to [`makepkg`](https://man.archlinux.org/man/makepkg.8.en) (the command to install packages using `PKGBUILD` files).
 
-* Package maintainers can bypass the checksum verification for a source by using `SKIP` instead of an actual hash. This tells `makepkg` to skip the integrity check for that particular source. For example, the [etherdu2048-cursesmp](https://aur.archlinux.org/packages/etherdump) package does not verify the integrity of its sources:
+* Package maintainers can bypass the checksum verification for specific sources by using `SKIP` instead of actual hashes. This tells `makepkg` to skip the integrity check for that particular source. For example, the [etherdu2048-cursesmp](https://aur.archlinux.org/packages/etherdump) package does not verify the integrity of its sources:
     ```bash
     pkgname=2048-curses
     pkgver=1.2
@@ -206,7 +208,7 @@ There are no practical [pre-image attacks](https://en.wikipedia.org/wiki/Preimag
     }
     ```
 
-Unfortunately, using `SKIP` instead of using actual hash values is quite common. We counted 30083 (35%) packages that use `SKIP` for at least one source. This means that there is a decent chance that one of the 20 packages we found use `SKIP`. We found four (and filed deletion requests for all of them).
+Unfortunately, the use of `SKIP` is quite common. We counted 30083 (35%) packages that use `SKIP` for at least one source. This means that there is a decent chance that one of the 20 packages we found uses `SKIP`. We found several (and submitted deletion requests for all of them).
 
 Installing these packages is **dangerous**, because not only do they use sources with expired domains, but they also do not verify the integrity of any files downloaded from those domains.
 
@@ -224,7 +226,7 @@ As an aside, this is the number of uses of each hash type we counted (excluding 
 | CRC32   | 16        | 0.02% |
 
 ### A Proof-of-Concept Package Hijack
-Now that we have four vulnerable packages, we will perform a proof-of-concept attack to show how such an attack would work (and how easy it is to perform). We anonymized the package name and domain by `vulnerable-package` and `vulnerable-package.org`, respectively.
+Now that we have found vulnerable packages, we will perform a proof-of-concept attack to show how such an attack would work. We anonymized the package name and domain by `vulnerable-package` and `vulnerable-package.org`, respectively.
 
 **Disclaimer:** _I understand that the applied anonymization is not strong and anyone that wants to find the vulnerable package will find it. I decided to publish this proof-of-concept attack, because: (a) it shows that this attack is possible on real-world packages, (b) package information is public and anybody that wants to find similarly vulnerable packages can do so, (c) the package is by definition broken and unused and (d) I notified the AUR by sending deletion requests._
 
@@ -267,14 +269,14 @@ Finally, we need two files that match the path and filenames of the files that a
 1. `view/anonymized/job/anonymized-PHP-Binary/lastSuccessfulBuild/artifact/Linux/PHP_Linux-x86_64.tar.gz`
 2. `view/anonymized/job/anonymized/lastSuccessfulBuild/artifact/start.sh`
 
-We leave the file empty and add the following (benign) content to `start.sh`:
+We leave the first file empty and add the following (benign) content to `start.sh`:
 ```Bash
 #! /usr/bin/env bash
 echo "[+] Code Execution"
 ```
 
 #### Installing and Executing the Hijacked Package
-When a victim installs the hijacked package, nothing out of the ordinary happens. Files are downloaded, checked and installed:
+When a victim installs the hijacked package, nothing out of the ordinary happens. Files are downloaded, verified and installed:
 
 _Note: [yay](https://github.com/Jguer/yay) is a popular AUR helper, a program that automates installing AUR packages._
 
@@ -358,7 +360,7 @@ Packages (1) vulnerable-package-4.0.0-2
 (1/1) installing vulnerable-package
 ```
 
-But when they actually try to run the software they just installed, it actually runs our files:
+But when they actually to run the software they just installed, it actually runs our files:
 ```bash
 $ /vulnerable-package/start.sh
 [+] Code Execution
@@ -367,12 +369,12 @@ $ cat /vulnerable-package/start.sh
 echo "[+] Code Execution"
 ```
 
-We have successfully gained arbitrary code execution on a victim system!
+In this fictitious scenario, we have successfully gained arbitrary code execution on a victim system!
 
 ### Discussion
-In this blog post we have shown a way to hijack existing AUR packages, by targeting the domains used in the installation process of those packages. Hijacking AUR packages is not a new concept. As we said in the introduction, hijacking AUR packages has always been possible (in multiple ways) and is a known risk.
+In this blog post we have shown that it is possible to hijack AUR packages by targeting the domains used in the installation process of those packages. Hijacking AUR packages is not a new concept. As we said in the introduction, hijacking AUR packages has always been possible (in multiple ways) and is a known risk.
 
-Hijacking a package by registering domains is far harder to detect and other methods, because the change of domain ownership is not registered within the AUR itself (unlike a malicious change to a `PKGDBUILD` file).
+However, hijacking a package by registering domains is harder to detect and other methods, because the change of domain ownership is not registered by the AUR (unlike a malicious change to a `PKGDBUILD` file).
 
 The best way to protect against this kind of attack is to enforce the integrity of source files by setting hash values. We saw that this is, unfortunately, not done for a significant portion (35%) of packages.
 
