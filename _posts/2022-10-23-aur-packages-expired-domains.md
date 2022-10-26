@@ -208,9 +208,9 @@ There are no practical [pre-image attacks](https://en.wikipedia.org/wiki/Preimag
     }
     ```
 
-Unfortunately, the use of `SKIP` is quite common. We counted 30083 (35%) packages that use `SKIP` for at least one source. This means that there is a decent chance that one of the 20 packages we found uses `SKIP`. We found four (and submitted deletion requests for all of them).
+The use of `SKIP` is quite common. We counted 30245 packages (35.25% of total) that use `SKIP` for at least one source. A significant portion of these will use a Git repository (or some other CVS) directly as its source, which means that they have to use `SKIP` (or update the `PKGBUILD` with new hashes for every new commit). For example, 21278 (24.80% of total packages) of packages that use `SKIP` have a name that ends with "-git".
 
-Installing these packages is **dangerous**, because not only do they use sources with expired domains, but they also do not verify the integrity of any files downloaded from those domains.
+4 of the 20 packages that we found use `SKIP` instead of actual hashes (we submitted deletion requests for all of them). Installing these packages is **dangerous**, because not only do they use sources with expired domains, but they also do not verify the integrity of any files downloaded from those domains.
 
 As an aside, this is the number of uses of each hash type we counted (excluding `SKIP` values):
 
@@ -375,6 +375,8 @@ In this fictitious scenario, we have successfully gained arbitrary code executio
 In this blog post we have shown that it is possible to hijack AUR packages by targeting the domains used in the installation process of those packages. Hijacking AUR packages is not a new concept. As we said in the introduction, hijacking AUR packages has always been possible (in multiple ways) and is a known risk.
 
 However, hijacking a package by registering domains is harder to detect and other methods, because the change of domain ownership is not registered by the AUR (unlike a malicious change to a `PKGDBUILD` file).
+
+In the end we found 4 (out of 85793 total) packages that are vulnerable to this attack. These packages are installed by only a handful of users, if any, because they are broken by definition. This shows that this attack is feasible, but not practical.
 
 The best way to protect against this kind of attack is to enforce the integrity of source files by setting hash values. We saw that this is, unfortunately, not done for a significant portion (35%) of packages.
 
