@@ -208,7 +208,7 @@ There are no practical [pre-image attacks](https://en.wikipedia.org/wiki/Preimag
     }
     ```
 
-Unfortunately, the use of `SKIP` is quite common. We counted 30083 (35%) packages that use `SKIP` for at least one source. This means that there is a decent chance that one of the 20 packages we found uses `SKIP`. We found several (and submitted deletion requests for all of them).
+Unfortunately, the use of `SKIP` is quite common. We counted 30083 (35%) packages that use `SKIP` for at least one source. This means that there is a decent chance that one of the 20 packages we found uses `SKIP`. We found four (and submitted deletion requests for all of them).
 
 Installing these packages is **dangerous**, because not only do they use sources with expired domains, but they also do not verify the integrity of any files downloaded from those domains.
 
@@ -226,7 +226,7 @@ As an aside, this is the number of uses of each hash type we counted (excluding 
 | CRC32   | 16        | 0.02% |
 
 ### A Proof-of-Concept Package Hijack
-Now that we have found vulnerable packages, we will perform a proof-of-concept attack to show how such an attack would work. We anonymized the package name and domain by `vulnerable-package` and `vulnerable-package.org`, respectively.
+Now that we four vulnerable packages, we will perform a proof-of-concept attack to show how such an attack would work. We anonymized the package name and domain by `vulnerable-package` and `vulnerable-package.org`, respectively.
 
 **Disclaimer:** _I understand that the applied anonymization is not strong and anyone that wants to find the vulnerable package will find it. I decided to publish this proof-of-concept attack, because: (a) it shows that this attack is possible on real-world packages, (b) package information is public and anybody that wants to find similarly vulnerable packages can do so, (c) the package is by definition broken and unused and (d) I notified the AUR by sending deletion requests._
 
@@ -379,6 +379,8 @@ However, hijacking a package by registering domains is harder to detect and othe
 The best way to protect against this kind of attack is to enforce the integrity of source files by setting hash values. We saw that this is, unfortunately, not done for a significant portion (35%) of packages.
 
 To help make the AUR (slightly) safer, I have submitted deletion requests for all the vulnerable packages.
+
+**Update:** All vulnerable packages have been deleted.
 
 #### What About the Official Repositories?
 The official Arch Linux repositories also use the Arch Build System and there are also GitHub mirrors available for these repositories:
