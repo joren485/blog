@@ -3,6 +3,7 @@ domain: "blog.nietaanraken.nl"
 remote_theme: "jekyll/minima"
 
 title: "Blog by Joren Vrancken"
+description: "Blog by Joren Vrancken"
 author:
   name: "Joren Vrancken"
   email: "jorenvrancken@gmail.com"
@@ -12,5 +13,6 @@ header_pages:
 
 plugins:
   - "jekyll-redirect-from"
+  - "jekyll-feed"
 
 permalink: "/posts/:title/"
