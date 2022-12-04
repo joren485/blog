@@ -6,7 +6,7 @@ services:
   jekyll:
     image: "jekyll/jekyll"
     command: "jekyll serve --watch --drafts"
-    # command: "bundle update"
+    # command: "bundle update --all"
     ports:
       - "127.0.0.1:4000:4000"
     volumes:
