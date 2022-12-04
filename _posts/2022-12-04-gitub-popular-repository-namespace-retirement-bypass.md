@@ -1,6 +1,6 @@
 ---
 layout: "post"
-title:  "Hijacking GitHub Repositories by Restoring Deleted Repositories"
+title:  "Hijacking GitHub Repositories by Deleting and Restoring Them"
 date:   "2022-12-04"
 author: "Joren Vrancken"
 lang: "en-us"
