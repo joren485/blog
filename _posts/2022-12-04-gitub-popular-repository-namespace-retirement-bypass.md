@@ -6,12 +6,12 @@ author: "Joren Vrancken"
 lang: "en-us"
 ---
 
-Recently, I was researching GitHub repositories and I encountered an obscure security measure: the _popular repository namespace retirement_. This security measure was implemented by GitHub to protect (popular repositories) against repo jacking (i.e. hijacking attacks) of popular repositories.
+Recently, we encountered an obscure security measure while researching GitHub repositories: the _popular repository namespace retirement_. This security measure was implemented by GitHub to protect (popular) repositories against repo jacking (i.e. hijacking attacks).
 
 During this research, we discovered a way to bypass the popular repository namespace retirement. We reported this to GitHub, and they fixed the problem. In this post, we will discuss what the popular repository namespace retirement is, what attacks it is trying to protect against and how we (and others) were able to bypass it.
 
 ### Repo Jacking
-GitHub repositories are not unique among all users, but fall under the namespace of their owner. For example, the repository of this blog is uniquely identified as `joren485/blog`, even though are many other repositories that are called `blog`. This means that when a GitHub user renames their account, the namespace of all their repositories change too. For example, if a user `boring-github-user` with a repository `boring-github-user/repo` changes their name to `fancy-new-github-user`, the repository is now identified as `fancy-new-github-user/repo`.
+GitHub repository names are not unique. They fall under the namespace of their owner. For example, the repository of this blog is uniquely identified as `joren485/blog`, even though are many other repositories that are called `blog`. This means that when a GitHub user renames their account, the namespace of all their repositories change too. For example, if a user `boring-github-user` with a repository `boring-github-user/repo` changes their name to `fancy-new-github-user`, the repository is now identified as `fancy-new-github-user/repo`.
 
 But what happens to the old repository name (i.e. `boring-github-user/repo`) after a username change? To help downstream processes that depend on the repository (e.g. packages, build processes, CI pipelines, etc.) find the correct repository, GitHub sets up a redirect from the old repository name to the new repository (e.g. anyone cloning `boring-github-user/repo` would actually clone `fancy-new-github-user/repo` instead).
 
@@ -19,7 +19,7 @@ GitHub frees up the old username after a name change and allows other users to c
 
 This creates the possibility for an attacker to hijack repositories owned by renamed users: _repo jacking_.
 
-Let's look at how it works with an example:
+Let's look at how such attacks work with an example:
 1. A victim user has a GitHub account `victim` and a repository `victim/python-package`.
 2. The victim decides to change their GitHub username to `fancy-victim`. The name of the repository now also changes to `fancy-victim/python-package`.
 3. To help downstream packages find `victim/python-package` after the name change, GitHub sets up a redirect from `victim/python-package` to `fancy-victim/python-package`.
@@ -27,7 +27,7 @@ Let's look at how it works with an example:
 5. The attacker creates a repository `victim/python-package`. This removes the redirect that GitHub set up in step 3.
 6. Now all downstream packages that reference `victim/python-package` will reference code that the attacker controls and not the original, legitimate repository.
 
-If you want to learn more about repo jacking attacks, I suggest reading [_Repo Jacking: Exploiting the Dependency Supply Chain by Indiana Moreau_](https://blog.securityinnovation.com/repo-jacking-exploiting-the-dependency-supply-chain).
+If you want to learn more about repo jacking attacks, I suggest reading [_Repo Jacking: Exploiting the Dependency Supply Chain_](https://blog.securityinnovation.com/repo-jacking-exploiting-the-dependency-supply-chain).
 
 ### Popular Repository Namespace Retirement
 To protect users against repo jacking attacks, GitHub implemented a security mechanism called the "[popular repository namespace retirement](https://github.blog/2018-04-18-new-tools-for-open-source-maintainers/#popular-repository-namespace-retirement)". This feature blocks users from creating a repository, if the repository existed previously and got 100 clones in the week before the name change.
@@ -65,7 +65,7 @@ When a user deletes a repository, they are able to restore it by going to [the "
 ### Restoring Retired Repositories
 What happens if we try to restore a repository that is protected by namespace retirement? Let's find out!
 
-To test this, we need a repository that is retired. For this, we will use `blacksphere/blackmagic`. `blacksphere` was renamed to `blackmagic-debug`, so `blacksphere/blackmagic` now redirects to [`blackmagic-debug/blackmagic`](https://github.com/blackmagic-debug/blackmagic).`
+To test this, we need a repository that is retired. We will use `blacksphere/blackmagic` for this. The `blacksphere` account was renamed to `blackmagic-debug`, so `blacksphere/blackmagic` now redirects to [`blackmagic-debug/blackmagic`](https://github.com/blackmagic-debug/blackmagic).`
 
 **Disclaimer:** _I am in no way affiliated with the previous owners of the `blacksphere` GitHub account and choice `blacksphere/blackmagic` because it was the first repository protected by the popular repository namespace retirement that I found._
 
@@ -105,7 +105,7 @@ Let's look at how an attacker would use this bypass to hijack GitHub repositorie
 ### Discussion
 This is the third bypass of popular repository namespace retirement. All three bypasses rely on non-standard ways to create repositories. This indicates that there is no central check to verify a repository isn't retired when it is created. If this assumption is correct, there may well be other bypasses still out there.
 
-While popular repository namespace retirement is an obscure security mechanism, it is important, because [tens of thousands of GitHub repositories are vulnerable to repo jacking](https://blog.securityinnovation.com/repo-jacking-exploiting-the-dependency-supply-chain). It is already a relatively weak security mechanism, because the vast majority of repositories do not fall within its requirements. For example, I would venture to say that 90+% of GitHub repositories get less than 100 clones a week. Being able to bypass it removes any protection popular repositories had. These types of bypasses are being [actively used by malicious actors to deploy malicious content](https://checkmarx.com/blog/attacker-caught-hijacking-packages-using-multiple-techniques-to-steal-aws-credentials/).
+While popular repository namespace retirement is an obscure security mechanism, it is important, because [tens of thousands of GitHub repositories are vulnerable to repo jacking](https://blog.securityinnovation.com/repo-jacking-exploiting-the-dependency-supply-chain). It is already a relatively weak security mechanism, because the vast majority of repositories do not fall within its requirements. For example, I would venture to say that 90+% of GitHub repositories get less than 100 clones a week. Being able to bypass it means that popular repositories also become vulnerable to repo jacking. These types of bypasses are being [actively used by malicious actors to deploy malicious content](https://checkmarx.com/blog/attacker-caught-hijacking-packages-using-multiple-techniques-to-steal-aws-credentials/).
 
 When an attacker is able to successfully perform a repo jacking attack, all packages that use the repository will now use malicious code. As with all supply chain vulnerabilities, this does not only apply to packages that use the hijacked repository directly, but also for all packages that use the hijacked repository indirectly. This allows an attacker to impact many downstream packages by only hijacking one vulnerable repository.
 
