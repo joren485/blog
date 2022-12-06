@@ -11,6 +11,9 @@ author:
 header_pages:
   - "about.md"
 
+minima:
+  date_format: "%Y-%m-%d"
+
 plugins:
   - "jekyll-redirect-from"
   - "jekyll-feed"
