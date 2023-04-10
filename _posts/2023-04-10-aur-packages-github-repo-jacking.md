@@ -214,7 +214,7 @@ Unfortunately, the official repositories do not publish `.SRCINFO` for its packa
 We performed the same analysis we did for AUR packages and found nine vulnerable packages (in the `community` repository):
 
 |                             | **Integrity verification** | **No integrity verification** |
-| **Repository exists**       | 1 package (type **_11_**) | 8 packages (type **_21_**) |
+| **Repository exists**       | 8 package (type **_11_**) | 1 packages (type **_21_**) |
 | **Repository doesn't exist**| 0 packages (type **_12_**) | 0 packages (type **_22_**) |
 
 It is expected to find no packages of type **_12_** and **_22_**, because packages in the official repositories are actively maintained. On the other hand, the fact that we were able to find a vulnerable package that does not use integrity verification is slightly alarming.
@@ -223,15 +223,15 @@ The packages in question are:
 
 | # | Package            | GitHub Repository   | Type |
 |---|--------------------|--------------------------------| |
-| 1 | [`blackmagic`](https://archlinux.org/packages/community/x86_64/blackmagic) | [blacksphere/blackmagic](https://github.com/blacksphere/blackmagic) | **_11_** |
-| 2 | [`deepin-topbar`](https://archlinux.org/packages/community/x86_64/deepin-topbar) | [kirigayakazushin/deepin-topbar](https://github.com/kirigayakazushin/deepin-topbar) | **_21_** |
-| 3 | [`deepin-store`](https://archlinux.org/packages/community/x86_64/deepin-store) | [dekzi/dde-store](https://github.com/dekzi/dde-store) | **_21_** |
-| 4 | [`poppler-sharp`](https://archlinux.org/packages/community/any/poppler-sharp) | [jacintos/poppler-sharp](https://github.com/jacintos/poppler-sharp) | **_21_** |
-| 5 | [`python-json-config`](https://archlinux.org/packages/community/any/python-json-config) | [bionikspoon/json_config](https://github.com/bionikspoon/json_config) | **_21_** |
-| 6 | [`python-pyotp`](https://archlinux.org/packages/community/any/python-pyotp) | [pyotp/pyotp](https://github.com/pyotp/pyotp) | **_21_** |
-| 7 | [`python-args`](https://archlinux.org/packages/community/any/python-args) | [kenneth-reitz/args](https://github.com/kenneth-reitz/args) | **_21_** |
-| 8 | [`python-pypandoc`](https://archlinux.org/packages/community/any/python-pypandoc) | [nicklastegner/pypandoc](https://github.com/nicklastegner/pypandoc) | **_21_** |
-| 9 | [`telepathy-morse`](https://archlinux.org/packages/community/x86_64/telepathy-morse) | [telepathyqt/telepathy-morse](https://github.com/telepathyqt/telepathy-morse) | **_21_** |
+| 1 | [`blackmagic`](https://archlinux.org/packages/community/x86_64/blackmagic) | [blacksphere/blackmagic](https://github.com/blacksphere/blackmagic) | **_21_** |
+| 2 | [`deepin-topbar`](https://archlinux.org/packages/community/x86_64/deepin-topbar) | [kirigayakazushin/deepin-topbar](https://github.com/kirigayakazushin/deepin-topbar) | **_11_** |
+| 3 | [`deepin-store`](https://archlinux.org/packages/community/x86_64/deepin-store) | [dekzi/dde-store](https://github.com/dekzi/dde-store) | **_11_** |
+| 4 | [`poppler-sharp`](https://archlinux.org/packages/community/any/poppler-sharp) | [jacintos/poppler-sharp](https://github.com/jacintos/poppler-sharp) | **_11_** |
+| 5 | [`python-json-config`](https://archlinux.org/packages/community/any/python-json-config) | [bionikspoon/json_config](https://github.com/bionikspoon/json_config) | **_11_** |
+| 6 | [`python-pyotp`](https://archlinux.org/packages/community/any/python-pyotp) | [pyotp/pyotp](https://github.com/pyotp/pyotp) | **_11_** |
+| 7 | [`python-args`](https://archlinux.org/packages/community/any/python-args) | [kenneth-reitz/args](https://github.com/kenneth-reitz/args) | **_11_** |
+| 8 | [`python-pypandoc`](https://archlinux.org/packages/community/any/python-pypandoc) | [nicklastegner/pypandoc](https://github.com/nicklastegner/pypandoc) | **_11_** |
+| 9 | [`telepathy-morse`](https://archlinux.org/packages/community/x86_64/telepathy-morse) | [telepathyqt/telepathy-morse](https://github.com/telepathyqt/telepathy-morse) | **_11_** |
 
 As said before, we registered the `blacksphere` GitHub account to prevent others from exploiting the vulnerability.
 
