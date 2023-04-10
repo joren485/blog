@@ -211,27 +211,23 @@ Up until this point, we only looked at AUR packages. Packages in the official Ar
 
 Unfortunately, the official repositories do not publish `.SRCINFO` for its packages. This means we need to rely solely on `PKGBUILD` files, essentially Bash scripts, to parse the source URLs for each package. We did a regex search for GitHub URLs in each package's `PKGBUILD` file to get a list of GitHub repositories. Keep in mind that this process is error-prone and requires manual validation.
 
-We performed the same analysis we did for AUR packages and found nine vulnerable packages (in the `community` repository):
+We performed the same analysis we did for AUR packages and found nine packages (in the `community` repository):
 
 |                             | **Integrity verification** | **No integrity verification** |
 | **Repository exists**       | 8 package (type **_11_**) | 1 packages (type **_21_**) |
 | **Repository doesn't exist**| 0 packages (type **_12_**) | 0 packages (type **_22_**) |
 
-It is expected to find no packages of type **_12_** and **_22_**, because packages in the official repositories are actively maintained. On the other hand, the fact that we were able to find a vulnerable package that does not use integrity verification is slightly alarming.
+It is expected to find no packages of type **_12_** and **_22_**, because packages in the official repositories are actively maintained.
 
-The packages in question are:
+The official repositories work differently from the AUR in that they publish pre-built binaries instead of letting users pull and build the external sources themselves. This means that packages of type **_11_** are not impacted by repo jacking, until a maintainer rebuilds the pre-built binaries and notices that the build fails because the integrity verification check fails.
+
+The type **_21_** package is vulnerable. The vulnerability can be exploited when a maintainer rebuilds the package. An attacker could publish a copy of the legitimate GitHub repository, including malware, to the repo jacked GitHub repository. When the maintainer rebuilds and releases the new package, they would release a malicious version.
+
+The vulnerable package in question is:
 
 | # | Package            | GitHub Repository   | Type |
 |---|--------------------|--------------------------------| |
 | 1 | [`blackmagic`](https://archlinux.org/packages/community/x86_64/blackmagic) | [blacksphere/blackmagic](https://github.com/blacksphere/blackmagic) | **_21_** |
-| 2 | [`deepin-topbar`](https://archlinux.org/packages/community/x86_64/deepin-topbar) | [kirigayakazushin/deepin-topbar](https://github.com/kirigayakazushin/deepin-topbar) | **_11_** |
-| 3 | [`deepin-store`](https://archlinux.org/packages/community/x86_64/deepin-store) | [dekzi/dde-store](https://github.com/dekzi/dde-store) | **_11_** |
-| 4 | [`poppler-sharp`](https://archlinux.org/packages/community/any/poppler-sharp) | [jacintos/poppler-sharp](https://github.com/jacintos/poppler-sharp) | **_11_** |
-| 5 | [`python-json-config`](https://archlinux.org/packages/community/any/python-json-config) | [bionikspoon/json_config](https://github.com/bionikspoon/json_config) | **_11_** |
-| 6 | [`python-pyotp`](https://archlinux.org/packages/community/any/python-pyotp) | [pyotp/pyotp](https://github.com/pyotp/pyotp) | **_11_** |
-| 7 | [`python-args`](https://archlinux.org/packages/community/any/python-args) | [kenneth-reitz/args](https://github.com/kenneth-reitz/args) | **_11_** |
-| 8 | [`python-pypandoc`](https://archlinux.org/packages/community/any/python-pypandoc) | [nicklastegner/pypandoc](https://github.com/nicklastegner/pypandoc) | **_11_** |
-| 9 | [`telepathy-morse`](https://archlinux.org/packages/community/x86_64/telepathy-morse) | [telepathyqt/telepathy-morse](https://github.com/telepathyqt/telepathy-morse) | **_11_** |
 
 As said before, we registered the `blacksphere` GitHub account to prevent others from exploiting the vulnerability.
 
@@ -243,7 +239,7 @@ This disclaimer reminds us that the AUR is essentially unvalidated content, and 
 
 Because GitHub helpfully redirects renamed usernames, packages will not notice or be notified when the owner of an upstream repository changes their name, leaving them vulnerable. This leaves it up to the package maintainers (and users) to regularly verify the upstream repositories. On the other hand GitHub users are often not aware of all the downstream packages and references pointing to their repositories. This inherent disconnect leaves many AUR packages vulnerable, as we saw.
 
-The AUR disclaimer does not apply to the official Arch Linux repositories and users should be able to expect these packages to work properly. However, as we saw even a handful of packages in the community repositories are vulnerable. We were even able to find a package in the community repositories that could have been fully hijacked. As these packages are actively maintained and monitored, it shows how hard it is to detect this vulnerability if you are not explicitly looking for it. I notified the [Arch Linux Security team](https://wiki.archlinux.org/title/Arch_Security_Team) (in November 2022) of the issues with the community packages.
+The AUR disclaimer does not apply to the official Arch Linux repositories and users should be able to expect these packages to work properly. However, as we saw even a package in the community repositories is vulnerable. As these packages are actively maintained and monitored, it shows how hard it is to detect this vulnerability if you are not explicitly looking for it. I notified the [Arch Linux Security team](https://wiki.archlinux.org/title/Arch_Security_Team) (in November 2022) of the issues.
 
 The [Arch package guidelines](https://wiki.archlinux.org/title/Arch_package_guidelines#Package_sources) provide guidance for package maintainers on how to secure their packages. It boils down to: use integrity verification whenever possible. Unfortunately, checksum verification is not possible on VCS source, because they are not static and PGP signed commits are often not available.
 
