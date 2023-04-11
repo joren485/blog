@@ -87,7 +87,7 @@ As we can see, during the installation of `blackmagic`, `makepkg` will clone and
 
 If we were to register the `blacksphere` GitHub account and create a new `blacksphere/blackmagic` repository, we will have full control over what is installed by the `blackmagic` package. We can publish arbitrary files, and they will be compiled by `make PROBE_HOST=hosted` when installing the `blackmagic` package.
 
-**Please Note:** _I am in no way affiliated with the previous owners of the `blacksphere` GitHub account. We registered the `blacksphere` GitHub account, to confirm the attack is possible and to prevent others from exploiting it._
+**Please Note:** _I am in no way affiliated with the previous owners of the `blacksphere` GitHub account. I registered the `blacksphere` GitHub account, to confirm the attack is possible and to prevent others from exploiting it._
 
 ### Finding Vulnerable AUR Packages
 _If you want to know more about the [Arch Build System](https://wiki.archlinux.org/title/Arch_Build_System) and how we got data of all packages, please read the [first post]({% post_url 2022-10-23-aur-packages-expired-domains %})._
@@ -225,9 +225,9 @@ The type **_21_** package is vulnerable. The vulnerability can be exploited when
 
 The vulnerable package in question is:
 
-| # | Package            | GitHub Repository   | Type |
-|---|--------------------|--------------------------------| |
-| 1 | [`blackmagic`](https://archlinux.org/packages/community/x86_64/blackmagic) | [blacksphere/blackmagic](https://github.com/blacksphere/blackmagic) | **_21_** |
+| Package            | GitHub Repository   | Type |
+|--------------------|--------------------------------| |
+| [`blackmagic`](https://archlinux.org/packages/community/x86_64/blackmagic) | [blacksphere/blackmagic](https://github.com/blacksphere/blackmagic) | **_21_** |
 
 As said before, we registered the `blacksphere` GitHub account to prevent others from exploiting the vulnerability.
 
@@ -239,7 +239,7 @@ This disclaimer reminds us that the AUR is essentially unvalidated content, and 
 
 Because GitHub helpfully redirects renamed usernames, packages will not notice or be notified when the owner of an upstream repository changes their name, leaving them vulnerable. This leaves it up to the package maintainers (and users) to regularly verify the upstream repositories. On the other hand GitHub users are often not aware of all the downstream packages and references pointing to their repositories. This inherent disconnect leaves many AUR packages vulnerable, as we saw.
 
-The AUR disclaimer does not apply to the official Arch Linux repositories and users should be able to expect these packages to work properly. However, as we saw even a package in the community repositories is vulnerable. As these packages are actively maintained and monitored, it shows how hard it is to detect this vulnerability if you are not explicitly looking for it. I notified the [Arch Linux Security team](https://wiki.archlinux.org/title/Arch_Security_Team) (in November 2022) of the issues.
+The AUR disclaimer does not apply to the official Arch Linux repositories and users should be able to expect these packages to work properly. However, as we saw even a package in the community repositories is vulnerable. As these packages are actively maintained and monitored, it shows how hard it is to detect this vulnerability if you are not explicitly looking for it. We notified the [Arch Linux Security team](https://wiki.archlinux.org/title/Arch_Security_Team) (in November 2022) of the issues.
 
 The [Arch package guidelines](https://wiki.archlinux.org/title/Arch_package_guidelines#Package_sources) provide guidance for package maintainers on how to secure their packages. It boils down to: use integrity verification whenever possible. Unfortunately, checksum verification is not possible on VCS source, because they are not static and PGP signed commits are often not available.
 
