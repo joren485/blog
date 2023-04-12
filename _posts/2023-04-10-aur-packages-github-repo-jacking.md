@@ -83,7 +83,7 @@ package() {
 }
 ```
 
-As we can see, during the installation of `blackmagic`, `makepkg` will clone and install the `blacksphere/blackmagic` GitHub repository. However, if we got to `https://github.com/blackmagic-debug/blackmagic`, we are redirected to `https://github.com/blackmagic-debug/blackmagic`. The owners of the `blacksphere` GitHub account have renamed their account to `blackmagic-debug`.
+As we can see, during the installation of `blackmagic`, `makepkg` will clone and install the `blacksphere/blackmagic` GitHub repository. However, if we got to `https://github.com/blacksphere/blackmagic`, we are redirected to `https://github.com/blackmagic-debug/blackmagic`. The owners of the `blacksphere` GitHub account have renamed their account to `blackmagic-debug`.
 
 If we were to register the `blacksphere` GitHub account and create a new `blacksphere/blackmagic` repository, we will have full control over what is installed by the `blackmagic` package. We can publish arbitrary files, and they will be compiled by `make PROBE_HOST=hosted` when installing the `blackmagic` package.
 
