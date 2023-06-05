@@ -265,7 +265,7 @@ In short, our analysis consists of the following steps:
     2. Check if the bytes match an F.L.I.R.T. signature.
     3. Print any matches.
 
-_The final code is available at: TBD._
+_The final code is available as [an example in the PANDA GitHub repository](https://github.com/panda-re/panda/tree/82334a57cce6792f22348a4d07e6fc706c529423/panda/python/examples/flirt-signatures)._
 
 Besides printing the identified functions, this code also disassembles and prints the first 5 instructions of each function, to verify the identified functions actually match the instructions in the original binary.
 
