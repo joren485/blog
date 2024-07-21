@@ -1,6 +1,6 @@
 ---
 layout: "post"
-title:  "Carving ELF files"
+title:  "Carving ELF Files"
 date:   "2024-07-21"
 author: "Joren Vrancken"
 lang: "en-US"
