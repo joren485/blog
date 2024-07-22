@@ -80,7 +80,7 @@ To parse the other parts in the ELF file, we are interested in the following fie
 #### The Program Headers Table
 The program headers table tells the operating system how to load the executable into memory. Each entry describes a _segment_. The header of each segment defines where the segment starts in the file, how big it is and how it should be loaded into memory.
 
-As this blog focuses on data on disk, the contents of the program headers table are not relevant here.
+When the operating system loads an ELF file into memory for execution, it only looks at the program headers table and ignores the section header tables.
 
 <table>
 <tr>
@@ -169,15 +169,17 @@ typedef struct elf64_shdr {
 The sections contain the actual data of the executable (e.g. the code and any static values). Their relevant properties are defined in the section headers table.
 
 ### Computing the Size of an ELF File
-_Usually_, the layout of an ELF file is as follows:
+_Usually_, the layout of an ELF file follows this order:
 1. The ELF file header,
 2. The program header table,
 3. The sections,
 4. The section header table.
 
-If this structure is followed, we can compute the file size by finding the end of the section headers table using the formula: `e_shoff` + `e_shentsize` * `e_shnum`. This formula gives us the size of the section header table from its offset plus its total size (number of entries times the size of each entry).
+For this layout, we can compute the file size by finding the end of the section headers table using the formula: `e_shoff` + `e_shentsize` * `e_shnum`. This formula gives us the size of the section header table from its offset plus its total size (the number of entries times the size of each entry).
 
 However, the ELF format does not enforce a strict order for its parts (except that the ELF file header must be at the start). The program header table, section header table, and sections can be in any order, as long as their pointers are correct. Thus, we need to find the end of the last part in the file to determine the file size.
+
+The ELF format also does not enforce the need for a section headers table (and splitting the file up into multiple sections). Only a program header table is required. Therefore, we must also consider the start and end offsets of each segment in the file.
 
 We compute the end of each part using the following formulas:
 
@@ -185,13 +187,17 @@ We compute the end of each part using the following formulas:
 2. Program headers table end: `e_phoff + e_phnum * e_phentsize`
 3. Each section's end: `sh_offset + sh_size`
 4. Section headers table end: `e_shoff + e_shnum * e_shentsize`
+5. Each segment's end: `p_offset + p_filesz`
 
 The largest result among these will be the file size.
 
 ### Example Computation
 Let's test this methodology on a real example: `/bin/ls`.
 
-Using the [`readelf`](https://man7.org/linux/man-pages/man1/readelf.1.html) command, we can parse ELF files. First, let's look at the ELF file header:
+Using the [`readelf`](https://man7.org/linux/man-pages/man1/readelf.1.html) command, we can parse ELF files.
+
+#### Headers
+First, let's look at the ELF file header:
 ```
 $ readelf --file-header /bin/ls
 ELF Header:
@@ -224,6 +230,8 @@ Using the values in the ELF file header, we compute the start, size and end of e
 | **Program Headers Table** | 64               | 13               | 56             | 13 * 56 = 728  | 64 + 728 = 792         |
 | **Section Headers Table** | 127936           | 28               | 64             | 28 * 64 = 1792 | 127936 + 1792 = 129728 |
 
+
+#### Sections
 We do the same for the sections, by parsing the section header table:
 ```
 $ readelf --section-headers /bin/ls
@@ -297,7 +305,7 @@ Key to Flags:
 
 Using the values in the section header table, we compute the start, size and end of each section:
 
-| **Section** | **Section start offset** | **Section size** | **Offset end offset** |
+| **Section** | **Start** | **Size** | **End** |
 |  | 0x0 | 0x0 | 0x0 + 0x0 = 0|
 | .interp | 0x318 | 0x1c | 0x318 + 0x1c = 820|
 | .note.gnu.property | 0x338 | 0x50 | 0x338 + 0x50 = 904|
@@ -327,11 +335,71 @@ Using the values in the section header table, we compute the start, size and end
 | .gnu_debuglink | 0x1f294 | 0x10 | 0x1f294 + 0x10 = 127652|
 | .shstrtab | 0x1f2a4 | 0x119 | 0x1f2a4 + 0x119 = 127933|
 
+
+#### Segments
+For the segments, we parse the program header table and look at the offset and size of each segment to compute its end.
+
+```
+$ readelf --program-header /bin/ls
+Elf file type is DYN (Position-Independent Executable file)
+Entry point 0x4f80
+There are 13 program headers, starting at offset 64
+
+Program Headers:
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+  PHDR           0x0000000000000040 0x0000000000000040 0x0000000000000040
+                 0x00000000000002d8 0x00000000000002d8  R      0x8
+  INTERP         0x0000000000000318 0x0000000000000318 0x0000000000000318
+                 0x000000000000001c 0x000000000000001c  R      0x1
+      [Requesting program interpreter: /lib64/ld-linux-x86-64.so.2]
+  LOAD           0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x00000000000020a0 0x00000000000020a0  R      0x1000
+  LOAD           0x0000000000003000 0x0000000000003000 0x0000000000003000
+                 0x0000000000012de1 0x0000000000012de1  R E    0x1000
+  LOAD           0x0000000000016000 0x0000000000016000 0x0000000000016000
+                 0x0000000000007830 0x0000000000007830  R      0x1000
+  LOAD           0x000000000001df70 0x000000000001ef70 0x000000000001ef70
+                 0x0000000000001308 0x00000000000025d0  RW     0x1000
+  DYNAMIC        0x000000000001ea78 0x000000000001fa78 0x000000000001fa78
+                 0x00000000000001f0 0x00000000000001f0  RW     0x8
+  NOTE           0x0000000000000338 0x0000000000000338 0x0000000000000338
+                 0x0000000000000050 0x0000000000000050  R      0x8
+  NOTE           0x0000000000000388 0x0000000000000388 0x0000000000000388
+                 0x0000000000000044 0x0000000000000044  R      0x4
+  GNU_PROPERTY   0x0000000000000338 0x0000000000000338 0x0000000000000338
+                 0x0000000000000050 0x0000000000000050  R      0x8
+  GNU_EH_FRAME   0x000000000001b1a0 0x000000000001b1a0 0x000000000001b1a0
+                 0x0000000000000594 0x0000000000000594  R      0x4
+  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
+                 0x0000000000000000 0x0000000000000000  RW     0x10
+  GNU_RELRO      0x000000000001df70 0x000000000001ef70 0x000000000001ef70
+                 0x0000000000001090 0x0000000000001090  R      0x1
+```
+
+Using the values in the program header table, we compute the start, size and end of each segment:
+
+| **Segment #** | **Start** | **Size** | **End** |
+| 0 | 0x40 | 0x2d8 | 0x40 + 0x2d8 = 792 |
+| 1 | 0x318 | 0x1c | 0x318 + 0x1c = 820 |
+| 2 | 0x0 | 0x20a0 | 0x0 + 0x20a0 = 8352 |
+| 3 | 0x3000 | 0x12de1 | 0x3000 + 0x12de1 = 89569 |
+| 4 | 0x16000 | 0x7830 | 0x16000 + 0x7830 = 120880 |
+| 5 | 0x1df70 | 0x1308 | 0x1df70 + 0x1308 = 127608 |
+| 6 | 0x1ea78 | 0x1f0 | 0x1ea78 + 0x1f0 = 126056 |
+| 7 | 0x338 | 0x50 | 0x338 + 0x50 = 904 |
+| 8 | 0x388 | 0x44 | 0x388 + 0x44 = 972 |
+| 9 | 0x338 | 0x50 | 0x338 + 0x50 = 904 |
+| 10 | 0x1b1a0 | 0x594 | 0x1b1a0 + 0x594 = 112436 |
+| 11 | 0x0 | 0x0 | 0x0 + 0x0 = 0 |
+| 12 | 0x1df70 | 0x1090 | 0x1df70 + 0x1090 = 126976 |
+
+#### Putting It All Together
 Now we have the start, size and end of all headers and all sections, we can simply compute the file size by getting the largest offset:
 
 ```bash
 $ python
->>> max([64, 792, 129728, 0, 820, 904, 940, 972, 1012, 3776, 5153, 5384, 5608, 8272, 8352, 12315, 89555, 89569, 111008, 112436, 120880, 122744, 122752, 125560, 126056, 126968, 127608, 0, 127635, 127652, 127933])
+>>> max([64, 792, 129728, 0, 820, 904, 940, 972, 1012, 3776, 5153, 5384, 5608, 8272, 8352, 12315, 89555, 89569, 111008, 112436, 120880, 122744, 122752, 125560, 126056, 126968, 127608, 0, 127635, 127652, 127933, 792, 820, 8352, 89569, 120880, 127608, 126056, 904, 972, 904, 112436, 0, 126976])
 129728
 ```
 
