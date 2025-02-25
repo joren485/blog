@@ -15,7 +15,6 @@ minima:
   date_format: "%Y-%m-%d"
 
 plugins:
-  - "jekyll-redirect-from"
   - "jekyll-feed"
 
 permalink: "/posts/:title/"
