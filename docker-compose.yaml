@@ -3,7 +3,7 @@
 services:
   jekyll:
     image: "jekyll/jekyll:latest"
-    command: "jekyll serve --watch --drafts"
+    command: "jekyll serve --watch --drafts --future"
     # command: "bundle update --all"
     ports:
       - "127.0.0.1:4000:4000"
